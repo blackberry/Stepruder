@@ -1,0 +1,26 @@
+{
+	"substitutions": {
+		"${SYNCID0}": "90", 
+		"${SYNCID1}": "91", 
+		"${SYNCID2}": "92", 
+		"${SYNCID3}": "93", 
+		"${SYNCID4}": "94", 
+		"${SYNCID5}": "95", 
+		"${SYNCID6}": "96", 
+		"${SYNCID7}": "97",
+		"${SYNCID8}": "98",
+		"${CLIENTID0}": "84", 
+		"${CLIENTID1}": "85", 
+		"${CLIENTID2}": "86", 
+		"${CLIENTID3}": "87", 
+		"${CLIENTID4}": "88", 
+		"${CLIENTID5}": "89", 
+		"${CLIENTID6}": "90", 
+		"${CLIENTID7}": "91",
+		"${CLIENTID8}": "92",
+		"${CSRFTOKEN}": "31be807e-d7e6-476f-bcac-e1974d4843e4",
+		"${JSESSIONID}": "Celd3ypNq-DoNFdwe94QYxZXkxaaPSBQSRj_Jgy1.localhost"
+	},
+	"ssl": true,
+	"port": 443
+}

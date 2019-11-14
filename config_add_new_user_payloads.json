@@ -1,0 +1,27 @@
+{
+	"ssl": true,
+	"port": 443,
+	"substitutions": {
+		"${CSRFTOKEN}": "7985ec74-2148-41bd-9839-7fab99b3d719",
+		"${JSESSIONID}": "CBl5IEHLT81PVu47T2_m4dcroDCvAztosu9ckTwf.localhost"
+	},
+	"payloads": {
+		"${SYNCID1}": {"type": "numeric", "start": "23", "end": "30", "step": "1"}, 
+		"${SYNCID2}": {"type": "numeric", "start": "23", "end": "30", "step": "1"}, 
+		"${SYNCID3}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${SYNCID4}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${SYNCID5}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${SYNCID6}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${SYNCID7}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${SYNCID8}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID1}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID2}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID3}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID4}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID5}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID6}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID7}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${CLIENTID8}": {"type": "numeric", "start": "23", "end": "30", "step": "1"},
+		"${PAYLOAD1}": {"type": "list", "path": "payloads.txt"}
+	}
+}

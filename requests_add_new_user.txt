@@ -1,0 +1,134 @@
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 297
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["33","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":73,"clientY":320,"ctrlKey":false,"metaKey":false,"relativeX":57,"relativeY":23,"shiftKey":false,"type":1}]]],"syncId":${SYNCID0},"clientId":${CLIENTID0}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 299
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["128","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":310,"clientY":188,"ctrlKey":false,"metaKey":false,"relativeX":32,"relativeY":17,"shiftKey":false,"type":1}]]],"syncId":${SYNCID1},"clientId":${CLIENTID1}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 180
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["172","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["Testuser8",9]]],"syncId":${SYNCID2},"clientId":${CLIENTID2}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 163
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["176","com.vaadin.shared.data.selection.SelectionServerRpc","select",["1"]]],"syncId":${SYNCID3},"clientId":${CLIENTID3}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 312
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["181","com.vaadin.shared.ui.checkbox.CheckBoxServerRpc","setChecked",[true,{"altKey":false,"button":"LEFT","clientX":887,"clientY":259,"ctrlKey":false,"metaKey":false,"relativeX":9,"relativeY":14,"shiftKey":false,"type":1}]]],"syncId":${SYNCID4},"clientId":${CLIENTID4}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 299
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["189","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":348,"clientY":512,"ctrlKey":false,"metaKey":false,"relativeX":50,"relativeY":10,"shiftKey":false,"type":1}]]],"syncId":${SYNCID5},"clientId":${CLIENTID5}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 265
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["236","v","v",["positionx",["i",504]]],["236","v","v",["positiony",["i",318]]],["241","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["4wBL6iO!HIctE",13]]],"syncId":${SYNCID6},"clientId":${CLIENTID6}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 267
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["243","org.vaadin.leif.zxcvbn.client.ZxcvbnRpc","setRating",["4wBL6iO!HIctE",4]],["244","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["4wBL6iO!HIctE",13]]],"syncId":${SYNCID7},"clientId":${CLIENTID7}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 299
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["248","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":657,"clientY":588,"ctrlKey":false,"metaKey":false,"relativeX":46,"relativeY":21,"shiftKey":false,"type":1}]]],"syncId":${SYNCID8},"clientId":${CLIENTID8}}

@@ -1,0 +1,19 @@
+{
+  "port": 443,
+  "ssl": true,
+  "substitutions": {
+    "constants": {
+      "${CSRFTOKEN}": "31be807e-d7e6-476f-bcac-e1974d4843e4",
+      "${JSESSIONID}": "Celd3ypNq-DoNFdwe94QYxZXkxaaPSBQSRj_Jgy1.localhost"
+    },
+    "responsevars": {
+      "${CLIENTID}": {
+        "json": "clientId",
+        "steps": [0,1,2,3,4,5,6,7,8]
+      },
+      "${SYNCID}": {
+        "regex": "\"syncId\":\\s*(\\d+?)"
+      }
+    }
+  }
+}

@@ -6,11 +6,12 @@ import json
 import requests
 import urllib3
 
+from collections import defaultdict
 from http.server import BaseHTTPRequestHandler
 from io import BytesIO
 
 #cass for parsing the HTTP request from text - adapted from https://stackoverflow.com/questions/4685217/parse-raw-http-headers
-class HTTPRequest(BaseHTTPRequestHandler):
+class ParsedHTTPRequest(BaseHTTPRequestHandler):
     def __init__(self, request_text):
         self.rfile = BytesIO(request_text)
         self.raw_requestline = self.rfile.readline()
@@ -25,9 +26,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 #parse payloads from config
-#returns number of iterations based on minimal number of payload lists
+#returns number of iterations based on minimal size of payload lists
 def parse_payloads():
-	#perform substitutions and do a substitution requestbulk
 	if config['payloads']:
 		iterations = sys.maxsize
 		for key in config['payloads']:
@@ -55,21 +55,56 @@ def parse_payloads():
 	else:
 		iterations = 0
 	return iterations
-		
-#send signle request given the string request
+
+#parse the response and retrieve the value based on json key
+#if multiple values appear the behavior is undefined
+def retrieve_responsevar_json(resp, json_exp):
+	try:
+		respdict = json.loads(resp)	#json parse just the body of the response
+		value = respdict[json_exp]	#TODO: what happens if 2 duplicate keys present? Python dictionary does not support duplicate keys BTW
+		return value
+	except Exception as e:
+		#return none if something goes south
+		if args.verbose:
+			print ("Error trying to match response:", e)
+		return None
+
+#parse the response and retrieve the value based on the first regex match
+#if capturing group is defined in the regex - the first matching capturing group is captured
+#if capturing group is not defined in the regex - the whole match is returned
+def retrieve_responsevar_regex(resp, regex_exp):
+	try:
+		value = re.search(regex_exp, resp)
+		return value
+	except Exception as e:
+		#return none if something goes south
+		if args.verbose:
+			print ("Error trying to match response:", e)
+		return None
+
+#send signle request given the request string
 def send_request(rstr, sequence_number, iteration_number):
 	
-	#embed payloads
+	#embed responsevar substitutions if any
+	for skey, svalue in current_step_substitutions.items():
+		if svalue:
+			rstr = rstr.replace(skey, str(svalue))
+			if args.verbose:
+				print ("Replacement in current step request: replaced {0} with {1}", skey, svalue)
+					
+	##embed payloads if any
 	for pkey, pvalue in payloads.items():
-		#print (pkey, pvalue[iteration_number])
 		rstr = rstr.replace(pkey, str(pvalue[iteration_number]))
-	
+		if args.verbose:
+			print ("Replacement in payload request: replaced {0} with {1}", pkey, pvalue[iteration_number])
+		
 	#automatic request parsing
 	rbytes = rstr.strip().encode('utf-8')
 	try:
-		request = HTTPRequest(rbytes)
+		request = ParsedHTTPRequest(rbytes)
 	except:
 		print ("Can't parse/understand HTTP requests from file")
+		current_step_substitutions.clear()	#no response - no substitutions
 		return
 	
 	#forming the url line - assuming first word is always method
@@ -91,7 +126,8 @@ def send_request(rstr, sequence_number, iteration_number):
 			r = requests.get(
 				url,
 				headers=request.headers,
-				verify=False)
+				verify=False,
+				timeout=(2,2))	#2s should to connect and read the response TODO should this be in config?
 		elif (request.command == 'POST'):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
 			#according to RFC, we expect at least one line in the request body 
@@ -101,14 +137,28 @@ def send_request(rstr, sequence_number, iteration_number):
 				url,
 				headers=request.headers, 
 				data=rdata,
-				verify=False)
+				verify=False,
+				timeout=(2,2)) #TODO should timeout be part of the config?
 		else:
 			#other methods are easy to add
 			print ("Unsupported method")
+			current_step_substitutions.clear()	#no response - no substitutions
 			return
 	except:
 			print ("Error sending request " + str(sequence_number))
+			current_step_substitutions.clear()	#no response - no substitutions
 			return
+
+	#fill up current (next) step substitutions
+	#no need to do this for the last response
+	if sequence_number < len(request_list):
+		for skey, svalue in step_substitutions[sequence_number].items():
+			if svalue[0] == 'json':
+				current_step_substitutions[skey] = retrieve_responsevar_json(r, svalue[1])
+			elif svalue[0] == 'regex':
+				current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
+			else:
+				print ("Error while performing substitutions")
 
 	#print (r.request.body)
 	if (args.verbose):
@@ -124,71 +174,110 @@ def send_request(rstr, sequence_number, iteration_number):
 def send_sequence(request_list, iteration):
 	num = 0
 	print ("Iteration " + str(iteration) + " - starting sequence")
+
+	#first request does not have response - init the current_step_substitutions with trivial value
+	current_step_substitutions.clear()
+	
 	for rstr in request_list:
 		num+=1
 		send_request(rstr, num, iteration)
 	print ("Iteration " + str(iteration) + " - sequence finished")
 	
-	
+#GLOBAL VARS
+constant_substitutions = {}
+payloads = {}
+sslconfig = False
+port = 80
+
 #MAIN FUNCTION	
 # Argument parsing
 parser = argparse.ArgumentParser(description='Script that parses requests file and configuration json. It applies substitutions from config file and sends the requests in order.')
 parser.add_argument("requestsfile", help="Text file containing sequence of HTPP requests, each separated by separator line (default #####)")
 parser.add_argument("configfile", help="JSON file containing variables substitutions and other config")
-parser.add_argument("-s", "--separator", help="custom separator between requests in requestsfile")
-parser.add_argument("-v", "--verbose", action="store_true", help="increase output verbosity")
+parser.add_argument("-s", "--separator", help="Custom separator between requests in requestsfile")
+parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
+parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
 args = parser.parse_args()
 
+#read requests file
 try:
-	with open(args.requestsfile, 'r') as requestsfile:
-   			requestbulk = requestsfile.read()
+    with open(args.requestsfile, 'r') as rf:
+        requestbulk = rf.read()
+		#config = configfile.read()
 except:
-	print ("Can't open requests file", args.requests)
+	print ("Can't open requests file", args.requestsfile)
 	sys.exit(0)
 
 #parse config file as json
-#try:
-with open(args.configfile, 'r') as configfile:
-	config = json.load(configfile)
+try:
+    with open(args.configfile, 'r') as configfile:
+        config = json.load(configfile)
 		#config = configfile.read()
-#except:
-#	print ("Can't load json from file", args.configfile)
-#	sys.exit(0)
+except:
+	print ("Can't load json from file", args.configfile)
+	sys.exit(0)
 
 #parse the ssl config
-sslconfig = False
-port = 80
 if 'ssl' in config and config['ssl']:
 	sslconfig = True
 	port = 443
 if 'port' in config:
 	port = config['port']
 
-#substitutions are perofmed once before starting the iterations
-substitutions = config['substitutions']
-for key, value in substitutions.items(): 
+#constant substitutions are perofmed once before starting the iterations
+if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():
+    constant_substititions = config['substitutions']['constants']
+for key, value in constant_substitutions.items(): 
 	#we can assume the format for substitution is "key: value"
 	requestbulk = requestbulk.replace(key, value)
+	if args.verbose:
+		print ("Replacement in constant request: replaced {0} with {1}", key, value)
 
 #parse the bulk and get a list of requests
 if args.separator:
 	request_list = re.split(args.separator, requestbulk)
 else:
 	request_list = re.split(r'#####', requestbulk)
-	
-payloads = {}
+
+#payloads parsing if any	
 if 'payloads' in config.keys():
 	iterations = parse_payloads()
 else:
 	iterations = 1
 
+step_substitutions = [dict() for x in range(len(request_list))]
+current_step_substitutions = {}
+step_substitutions_num = 0
+if ('substitutions' in config.keys()) and ('responsevars' in config['substitutions'].keys()):
+    for key,value in config['substitutions']['responsevars'].items():
+        step_substitutions_num += 1
+        if 'json' in value.keys():
+            if 'steps' in value.keys():
+                for i in value['steps']:
+                    step_substitutions[i][key] = ('json',value['json'])
+            else:
+                for i in range(0,len(request_list),1):
+                    step_substitutions[i][key] = ('json',value['json'])
+        elif 'regex' in value.keys():
+            if 'steps' in value.keys():
+                for i in value['steps']:
+                    step_substitutions[i][key] = ('regex',value['regex'])
+            else:
+                for i in range(0,len(request_list),1):
+                    step_substitutions[i][key] = ('regex',value['regex'])
+        else:
+            print("Can't parse config file - invalid responsevar")
+            sys.exit(0)
+
 if (args.verbose):
-	print ("Parsed: {0} substitutions and {1} injection points; payload sequence length is {2}; total requests to be sent {3}.".format(
-		len(config['substitutions']), 
+	print ("Parsed: {0} substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
+		len(config['substitutions']),
+		step_substitutions_num,
 		len(payloads), 
 		iterations,
 		len(request_list)*iterations))
 
+#main sending loop
 for i in range(0, iterations, 1):
 	send_sequence(request_list, i)
 	

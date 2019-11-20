@@ -60,13 +60,13 @@ def parse_payloads():
 #if multiple values appear the behavior is undefined
 def retrieve_responsevar_json(resp, json_exp):
 	try:
-		respdict = json.loads(resp)	#json parse just the body of the response
+		respdict = json.loads(resp.content)	#json parse just the body of the response
 		value = respdict[json_exp]	#TODO: what happens if 2 duplicate keys present? Python dictionary does not support duplicate keys BTW
 		return value
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
-			print ("Error trying to match response:", e)
+			print ("Error trying to match JSON response:", e)
 		return None
 
 #parse the response and retrieve the value based on the first regex match
@@ -74,18 +74,19 @@ def retrieve_responsevar_json(resp, json_exp):
 #if capturing group is not defined in the regex - the whole match is returned
 def retrieve_responsevar_regex(resp, regex_exp):
 	try:
-		value = re.search(regex_exp, resp)
+		value = re.search(regex_exp, str(resp.content))
 		return value
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
-			print ("Error trying to match response:", e)
+			print ("Error trying to match regex response:", e)
 		return None
 
 #send signle request given the request string
 def send_request(rstr, sequence_number, iteration_number):
 	
 	#embed responsevar substitutions if any
+	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
 		if svalue:
 			rstr = rstr.replace(skey, str(svalue))
@@ -102,8 +103,8 @@ def send_request(rstr, sequence_number, iteration_number):
 	rbytes = rstr.strip().encode('utf-8')
 	try:
 		request = ParsedHTTPRequest(rbytes)
-	except:
-		print ("Can't parse/understand HTTP requests from file")
+	except Exception as e:
+		print ("Can't parse/understand HTTP requests from file:", e)
 		current_step_substitutions.clear()	#no response - no substitutions
 		return
 	
@@ -122,6 +123,11 @@ def send_request(rstr, sequence_number, iteration_number):
 		print ('Sending {0} request {1} to {2}'.format(request.command, sequence_number, url))
 
 	try:
+		if logfile:
+			logfile.write(request.command + " ");
+			logfile.write(url + "\n");
+			logfile.write(str(request.headers) + "\n");
+
 		if (request.command == 'GET'):
 			r = requests.get(
 				url,
@@ -131,8 +137,11 @@ def send_request(rstr, sequence_number, iteration_number):
 		elif (request.command == 'POST'):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
 			#according to RFC, we expect at least one line in the request body 
-			rdata = rstr.split("\n\n")[1]
-				
+			#limiting number of spits to 1 to only split on the first newline in case there are multiple
+			rdata = rstr.split("\n\n", 1)[1]
+			if logfile:
+				logfile.write(rdata + "\n");
+
 			r = requests.post(
 				url,
 				headers=request.headers, 
@@ -144,31 +153,25 @@ def send_request(rstr, sequence_number, iteration_number):
 			print ("Unsupported method")
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
-	except:
-			print ("Error sending request " + str(sequence_number))
+	except Exception as e:
+			print ("Error sending request " + str(sequence_number) + " " + e)
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
 
 	#fill up current (next) step substitutions
-	#no need to do this for the last response
-	if sequence_number < len(request_list):
-		for skey, svalue in step_substitutions[sequence_number].items():
-			if svalue[0] == 'json':
-				current_step_substitutions[skey] = retrieve_responsevar_json(r, svalue[1])
-			elif svalue[0] == 'regex':
-				current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
-			else:
-				print ("Error while performing substitutions")
+	#if this is the last response in the sequence - carry over to the next iteration
+	for skey, svalue in step_substitutions[sequence_number % len(request_list)].items():
+		if svalue[0] == 'json':
+			current_step_substitutions[skey] = retrieve_responsevar_json(r, svalue[1])
+		elif svalue[0] == 'regex':
+			current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
+		else:
+			print ("Error while performing substitutions")
 
-	#print (r.request.body)
-	if (args.verbose):
-		print ("Status:{0}#####Content length:{1}#####Response time:{2}#####Content:{3}".format(r.status_code, 
-				len(r.content), 
-				r.elapsed.total_seconds(),
-				r.content))
-	else:
-		print ("{0}#####{1}".format(r.status_code, len(r.content)))
-		
+	print ("{0}#####{1}".format(r.status_code, len(r.content)))
+	if logfile:
+		logfile.write("---------------------\n" + str(r.content) + "\n======================\n");
+	
 		
 #send the sequence of requests given the array of string requests
 def send_sequence(request_list, iteration):
@@ -204,8 +207,8 @@ try:
     with open(args.requestsfile, 'r') as rf:
         requestbulk = rf.read()
 		#config = configfile.read()
-except:
-	print ("Can't open requests file", args.requestsfile)
+except Exception as e:
+	print ("Can't open requests file " + args.requestsfile + ": " + e)
 	sys.exit(0)
 
 #parse config file as json
@@ -213,8 +216,16 @@ try:
     with open(args.configfile, 'r') as configfile:
         config = json.load(configfile)
 		#config = configfile.read()
-except:
-	print ("Can't load json from file", args.configfile)
+except Exception as e:
+	print ("Can't load json from file " + args.configfile + " " + e)
+	sys.exit(0)
+
+try:
+	logfile = None
+	if args.log:
+		logfile = open(args.log, 'w')
+except Exception as e:
+	print ("Can't open log file for writing:" + args.log + " " + e)
 	sys.exit(0)
 
 #parse the ssl config
@@ -267,11 +278,13 @@ if ('substitutions' in config.keys()) and ('responsevars' in config['substitutio
                     step_substitutions[i][key] = ('regex',value['regex'])
         else:
             print("Can't parse config file - invalid responsevar")
+            if logfile:
+                logfile.close()
             sys.exit(0)
 
 if (args.verbose):
-	print ("Parsed: {0} substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
-		len(config['substitutions']),
+	print ("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
+		len(constant_substititions),
 		step_substitutions_num,
 		len(payloads), 
 		iterations,
@@ -281,3 +294,5 @@ if (args.verbose):
 for i in range(0, iterations, 1):
 	send_sequence(request_list, i)
 	
+if logfile:
+	logfile.close()

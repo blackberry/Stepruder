@@ -1,0 +1,28 @@
+{
+  "port": 443,
+  "ssl": true,
+  "substitutions": {
+    "constants": {
+      "${CSRFTOKEN}": "9a55b639-2f85-4332-9d0b-a5e447c2f084",
+      "${JSESSIONID}": "fFwlSHlqHluMTwQhOkyv17YidUsJTof5xbhydbmT.localhost",
+      "${CLIENTID}": "7",
+      "${SYNCID}": "7",
+      "${UPLOADID1}": "247",
+      "${UPLOADID2}": "eb3da875-09f0-4a52-85a1-c4e4d3766962"
+    },
+    "responsevars": {
+      "${CLIENTID}": {
+        "regex": "\"clientId\":\\s*(\\d+?)"
+      },
+      "${SYNCID}": {
+        "regex": "\"syncId\":\\s*(\\d+?)"
+      },
+      "${UPLOADID1}": {
+        "regex": "APP\\\/UPLOAD\\\/0\\\/()\\\/"
+      },
+      "${UPLOADID2}": {
+        "regex": "\\\/action\\\/()\""
+      }
+    }
+  }
+}

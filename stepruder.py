@@ -5,6 +5,8 @@ import re
 import json
 import requests
 import urllib3
+import logging
+import http.client
 
 from collections import defaultdict
 from http.server import BaseHTTPRequestHandler
@@ -22,8 +24,15 @@ class ParsedHTTPRequest(BaseHTTPRequestHandler):
         self.error_code = code
         self.error_message = message
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+#networking and logging config
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+http.client.HTTPConnection.debuglevel = 1
+logging.basicConfig()
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger("requests.packages.urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
 
 #parse payloads from config
 #returns number of iterations based on minimal size of payload lists
@@ -88,6 +97,7 @@ def send_request(rstr, sequence_number, iteration_number):
 	#embed responsevar substitutions if any
 	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
+		print ("Considering substitutions: " + str(skey) + str(svalue))
 		if svalue:
 			rstr = rstr.replace(skey, str(svalue))
 			if args.verbose:
@@ -95,6 +105,7 @@ def send_request(rstr, sequence_number, iteration_number):
 					
 	##embed payloads if any
 	for pkey, pvalue in payloads.items():
+		print ("Considering payloads: " + str(pkey) + str(pvalue))
 		rstr = rstr.replace(pkey, str(pvalue[iteration_number]))
 		if args.verbose:
 			print ("Replacement in payload request: replaced {0} with {1}", pkey, pvalue[iteration_number])
@@ -126,7 +137,7 @@ def send_request(rstr, sequence_number, iteration_number):
 		if logfile:
 			logfile.write(request.command + " ");
 			logfile.write(url + "\n");
-			logfile.write(str(request.headers) + "\n");
+			logfile.write(str(request.headers));
 
 		if (request.command == 'GET'):
 			r = requests.get(
@@ -138,7 +149,7 @@ def send_request(rstr, sequence_number, iteration_number):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
 			#according to RFC, we expect at least one line in the request body 
 			#limiting number of spits to 1 to only split on the first newline in case there are multiple
-			rdata = rstr.split("\n\n", 1)[1]
+			rdata = rstr.split("\n\n", 1)[1].strip()
 			if logfile:
 				logfile.write(rdata + "\n");
 
@@ -237,12 +248,13 @@ if 'port' in config:
 
 #constant substitutions are perofmed once before starting the iterations
 if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():
-    constant_substititions = config['substitutions']['constants']
+    constant_substitutions = config['substitutions']['constants']
 for key, value in constant_substitutions.items(): 
 	#we can assume the format for substitution is "key: value"
+	print("Considering constant substitutions: " + key + value)
 	requestbulk = requestbulk.replace(key, value)
 	if args.verbose:
-		print ("Replacement in constant request: replaced {0} with {1}", key, value)
+		print ("Replacement in constant request: replaced {0} with {1}".format(key, value))
 
 #parse the bulk and get a list of requests
 if args.separator:
@@ -284,7 +296,7 @@ if ('substitutions' in config.keys()) and ('responsevars' in config['substitutio
 
 if (args.verbose):
 	print ("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
-		len(constant_substititions),
+		len(constant_substitutions),
 		step_substitutions_num,
 		len(payloads), 
 		iterations,

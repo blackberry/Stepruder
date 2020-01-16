@@ -1,4 +1,4 @@
-POST https://10.135.51.72:443/css/ui/APP/UPLOAD/0/${UPLOADID1}/action/${UPLOADID2}
+POST https://10.135.51.72:443/css/ui/APP/UPLOAD/0/284/action/2e4ff82a-99e9-41d5-be46-7bbf197d2f04
 Host: 10.135.51.72
 Connection: close
 Content-Length: 1273
@@ -15,11 +15,10 @@ Sec-Fetch-Mode: nested-navigate
 Referer: https://10.135.51.72/css/ui
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9,ru;q=0.8
-Cookie: JSESSIONID=${JSESSIONID}
-
+Cookie: JSESSIONID=ngKuPoKntq2uMGcAPbZQk2ehnHsqa_aAbAlyKG_P.localhost
 
 ------WebKitFormBoundaryOvu0AnxbNACLvlrM
-Content-Disposition: form-data; name="${UPLOADID1}_file"; filename="poc3.txt"
+Content-Disposition: form-data; name="284_file"; filename="poc3.txt"
 Content-Type: text/plain
 
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -31,9 +30,8 @@ Content-Type: text/plain
 <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Template>Normal.dotm</Template><TotalTime>0</TotalTime><Pages>1</Pages><Words>1</Words><Characters>6</Characters><Application>Microsoft Office Word</Application><DocSecurity>0</DocSecurity><Lines>1</Lines><Paragraphs>1</Paragraphs><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Title</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr></vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><CharactersWithSpaces>6</CharactersWithSpaces><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0000</AppVersion></Properties>
 
 ------WebKitFormBoundaryOvu0AnxbNACLvlrM--
-
 ---------------------
-b'<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n<html><head>\n<title>410 Gone</title>\n</head><body>\n<h1>Gone</h1>\n<p>The requested resource<br />/css/ui/APP/UPLOAD/0/${UPLOADID1}/action/${UPLOADID2}<br />\nis no longer available on this server and there is no forwarding address.\nPlease remove all references to this resource.</p>\n</body></html>\n'
+b'<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n<html><head>\n<title>500 Internal Server Error</title>\n</head><body>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error or\nmisconfiguration and was unable to complete\nyour request.</p>\n<p>Please contact the server administrator at \n root@localhost to inform them of the time this error occurred,\n and the actions you performed just before this error.</p>\n<p>More information about this error may be available\nin the server error log.</p>\n</body></html>\n'
 ======================
 POST https://10.135.51.72:443/css/ui/UIDL/?v-uiId=0
 Host: 10.135.51.72
@@ -49,10 +47,9 @@ Sec-Fetch-Mode: cors
 Referer: https://10.135.51.72/css/ui
 Accept-Encoding: gzip, deflate
 Accept-Language: en-US,en;q=0.9,ru;q=0.8
-Cookie: JSESSIONID=${JSESSIONID}
+Cookie: JSESSIONID=ngKuPoKntq2uMGcAPbZQk2ehnHsqa_aAbAlyKG_P.localhost
 
-
-{"csrfToken":"${CSRFTOKEN}","rpc":[["${UPLOADID1}","com.vaadin.shared.ui.upload.UploadServerRpc","poll",[]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+{"csrfToken":"66f8b74b-8792-4d70-8af6-ab241fc77847","rpc":[["284","com.vaadin.shared.ui.upload.UploadServerRpc","poll",[]]],"syncId":8,"clientId":8}
 ---------------------
 b'for(;;);[{"changes":{},"resources":{},"locales":{},"meta":{"appError":{"caption":"Session Expired","url":null,"message":"Take note of any unsaved data, and <u>click here</u> or press ESC key to continue.","details":null}},"syncId":-1}]'
 ======================

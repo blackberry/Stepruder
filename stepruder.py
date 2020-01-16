@@ -25,15 +25,6 @@ class ParsedHTTPRequest(BaseHTTPRequestHandler):
         self.error_message = message
 
 
-#networking and logging config
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-http.client.HTTPConnection.debuglevel = 1
-logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
-requests_log = logging.getLogger("requests.packages.urllib3")
-requests_log.setLevel(logging.DEBUG)
-requests_log.propagate = True
-
 #parse payloads from config
 #returns number of iterations based on minimal size of payload lists
 def parse_payloads():
@@ -55,7 +46,7 @@ def parse_payloads():
 							payloads[key].append(line.strip())
 							line = payloadlist.readline()
 				except:
-					print ("Can't parse/understand payloads in config json - can't open list", config['payloads'][key1]['path'])
+					print ("Can't parse/understand payloads in config json - can't open list", config['payloads'][key]['path'])
 					sys.exit(0)
 			else:
 				print ("Can't parse/understand payloads in config json - unknown payload type")
@@ -97,13 +88,14 @@ def send_request(rstr, sequence_number, iteration_number):
 	#embed responsevar substitutions if any
 	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
-		print ("Considering substitutions: " + str(skey) + str(svalue))
+		if args.verbose:
+			print ("Considering substitutions: " + str(skey) + " / " + str(svalue))
 		if svalue:
 			rstr = rstr.replace(skey, str(svalue))
 			if args.verbose:
 				print ("Replacement in current step request: replaced {0} with {1}", skey, svalue)
 					
-	##embed payloads if any
+	#embed payloads if any
 	for pkey, pvalue in payloads.items():
 		print ("Considering payloads: " + str(pkey) + str(pvalue))
 		rstr = rstr.replace(pkey, str(pvalue[iteration_number]))
@@ -128,16 +120,16 @@ def send_request(rstr, sequence_number, iteration_number):
 		if sslconfig:
 			url = "https://" + request.headers['host'].split(":")[0] + ":" + str(port) + request.requestline.split(" ")[1]
 		else:
-			url = "https://" + request.headers['host'].split(":")[0] + ":" + str(port) + request.requestline.split(" ")[1]
+			url = "http//" + request.headers['host'].split(":")[0] + ":" + str(port) + request.requestline.split(" ")[1]
 
 	if (args.verbose):
 		print ('Sending {0} request {1} to {2}'.format(request.command, sequence_number, url))
 
 	try:
 		if logfile:
-			logfile.write(request.command + " ");
-			logfile.write(url + "\n");
-			logfile.write(str(request.headers));
+			logfile.write(request.command + " ")
+			logfile.write(url + "\n")
+			logfile.write(str(request.headers))
 
 		if (request.command == 'GET'):
 			r = requests.get(
@@ -151,7 +143,7 @@ def send_request(rstr, sequence_number, iteration_number):
 			#limiting number of spits to 1 to only split on the first newline in case there are multiple
 			rdata = rstr.split("\n\n", 1)[1].strip()
 			if logfile:
-				logfile.write(rdata + "\n");
+				logfile.write(rdata + "\n")
 
 			r = requests.post(
 				url,
@@ -181,13 +173,13 @@ def send_request(rstr, sequence_number, iteration_number):
 
 	print ("{0}#####{1}".format(r.status_code, len(r.content)))
 	if logfile:
-		logfile.write("---------------------\n" + str(r.content) + "\n======================\n");
-	
-		
+		logfile.write("---------------------\n" + str(r.content) + "\n======================\n")
+			
 #send the sequence of requests given the array of string requests
 def send_sequence(request_list, iteration):
 	num = 0
 	print ("Iteration " + str(iteration) + " - starting sequence")
+	print ("Status#####Responselen")
 
 	#first request does not have response - init the current_step_substitutions with trivial value
 	current_step_substitutions.clear()
@@ -212,6 +204,23 @@ parser.add_argument("-s", "--separator", help="Custom separator between requests
 parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
 args = parser.parse_args()
+
+#networking and logging config
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+if args.verbose:
+	http.client.HTTPConnection.debuglevel = 1
+	logging.basicConfig()
+	logging.getLogger().setLevel(logging.DEBUG)
+	requests_log = logging.getLogger("requests.packages.urllib3")
+	requests_log.setLevel(logging.DEBUG)
+	requests_log.propagate = True
+else:
+	http.client.HTTPConnection.debuglevel = 0
+	logging.basicConfig()
+	logging.getLogger().setLevel(logging.ERROR)
+	requests_log = logging.getLogger("requests.packages.urllib3")
+	requests_log.setLevel(logging.ERROR)
+	requests_log.propagate = True
 
 #read requests file
 try:
@@ -268,6 +277,7 @@ if 'payloads' in config.keys():
 else:
 	iterations = 1
 
+#initializing response vars and assigning them to the appropriate steps
 step_substitutions = [dict() for x in range(len(request_list))]
 current_step_substitutions = {}
 step_substitutions_num = 0

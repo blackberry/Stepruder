@@ -13,3 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implementing config file parsing
 - Basic sending / substitution logic
 - Initial commit
+
+## [0.0.2] - 2020-01-23
+### Added
+
+- Fixing bugs
+- Fixing printing errors
+- Making regex response parsing work
+- utf8 encoding of POST data

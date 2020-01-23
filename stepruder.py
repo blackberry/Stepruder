@@ -6,6 +6,7 @@ import json
 import requests
 import urllib3
 import logging
+import time
 import http.client
 
 from collections import defaultdict
@@ -74,8 +75,18 @@ def retrieve_responsevar_json(resp, json_exp):
 #if capturing group is not defined in the regex - the whole match is returned
 def retrieve_responsevar_regex(resp, regex_exp):
 	try:
-		value = re.search(regex_exp, str(resp.content))
-		return value
+		#first search the body
+		value = re.search(regex_exp, str(resp.text))
+		if value:
+			return value.group(1)
+		#if nothing matches - search the headers
+		for header in resp.headers:
+			value = re.search(regex_exp, header)
+			if value:
+				return value.group(1)
+		else:
+			if args.verbose:
+				print ('No match for {0}'.format(regex_exp))
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
@@ -89,19 +100,31 @@ def send_request(rstr, sequence_number, iteration_number):
 	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
 		if args.verbose:
-			print ("Considering substitutions: " + str(skey) + " / " + str(svalue))
+			print ("Considering substitutions: " + str(skey) + " with " + str(svalue))
 		if svalue:
 			rstr = rstr.replace(skey, str(svalue))
 			if args.verbose:
-				print ("Replacement in current step request: replaced {0} with {1}", skey, svalue)
+				print ('Replacement in current step request: replaced {0} with {1}'.format(skey, svalue))
 					
 	#embed payloads if any
 	for pkey, pvalue in payloads.items():
-		print ("Considering payloads: " + str(pkey) + str(pvalue))
+		print ("Considering payloads: " + str(pkey) + " with " + str(pvalue[iteration_number]))
+		
+		#should we check for special functions?
+		if rstr.find('${#'):
+			#checking for special functions - len
+			payload_len = "${len(" + pkey + ")}"
+			rstr = rstr.replace(payload_len, str(len(str(pvalue[iteration_number]))))
+
+			#checking for special functions - timestamp
+			payload_timestamp = str(time.time())
+			rstr = rstr.replace("#timestamp", payload_timestamp)) #same timestamp in all occurences
+
+		#now replace the actual payload
 		rstr = rstr.replace(pkey, str(pvalue[iteration_number]))
 		if args.verbose:
-			print ("Replacement in payload request: replaced {0} with {1}", pkey, pvalue[iteration_number])
-		
+			print ('Replacement in payload request: replaced {0} with {1}'.format(pkey, pvalue[iteration_number]))
+				
 	#automatic request parsing
 	rbytes = rstr.strip().encode('utf-8')
 	try:
@@ -141,7 +164,7 @@ def send_request(rstr, sequence_number, iteration_number):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
 			#according to RFC, we expect at least one line in the request body 
 			#limiting number of spits to 1 to only split on the first newline in case there are multiple
-			rdata = rstr.split("\n\n", 1)[1].strip()
+			rdata = rstr.split("\n\n", 1)[1].strip().encode('utf-8')
 			if logfile:
 				logfile.write(rdata + "\n")
 
@@ -162,11 +185,13 @@ def send_request(rstr, sequence_number, iteration_number):
 			return
 
 	#fill up current (next) step substitutions
-	#if this is the last response in the sequence - carry over to the next iteration
+	#TODO: if this is the last response in the sequence - carry over to the next iteration?
 	for skey, svalue in step_substitutions[sequence_number % len(request_list)].items():
 		if svalue[0] == 'json':
+			#for json it only makes sense to scan the response body
 			current_step_substitutions[skey] = retrieve_responsevar_json(r, svalue[1])
 		elif svalue[0] == 'regex':
+			#for regex we want to scan both the body and headers (f.e. cookies)
 			current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
 		else:
 			print ("Error while performing substitutions")
@@ -179,7 +204,7 @@ def send_request(rstr, sequence_number, iteration_number):
 def send_sequence(request_list, iteration):
 	num = 0
 	print ("Iteration " + str(iteration) + " - starting sequence")
-	print ("Status#####Responselen")
+	print ("Status#####ResponseLen")
 
 	#first request does not have response - init the current_step_substitutions with trivial value
 	current_step_substitutions.clear()
@@ -226,7 +251,6 @@ else:
 try:
     with open(args.requestsfile, 'r') as rf:
         requestbulk = rf.read()
-		#config = configfile.read()
 except Exception as e:
 	print ("Can't open requests file " + args.requestsfile + ": " + e)
 	sys.exit(0)
@@ -260,7 +284,8 @@ if 'substitutions' in config.keys() and 'constants' in config['substitutions'].k
     constant_substitutions = config['substitutions']['constants']
 for key, value in constant_substitutions.items(): 
 	#we can assume the format for substitution is "key: value"
-	print("Considering constant substitutions: " + key + value)
+	if args.verbose:
+		print("Considering constant substitutions: " + key + " with " + value)
 	requestbulk = requestbulk.replace(key, value)
 	if args.verbose:
 		print ("Replacement in constant request: replaced {0} with {1}".format(key, value))

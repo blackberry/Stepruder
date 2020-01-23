@@ -1,0 +1,104 @@
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 297
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["33","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":77,"clientY":319,"ctrlKey":false,"metaKey":false,"relativeX":61,"relativeY":22,"shiftKey":false,"type":1}]]],"syncId":29,"clientId":29}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 299
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["124","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":306,"clientY":196,"ctrlKey":false,"metaKey":false,"relativeX":28,"relativeY":25,"shiftKey":false,"type":1}]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 180
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["168","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["${PAYLOAD}",5]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 180
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["172","com.vaadin.shared.ui.combobox.ComboBoxServerRpc","setFilter",[""]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 163
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["172","com.vaadin.shared.data.selection.SelectionServerRpc","select",["2"]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 312
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["177","com.vaadin.shared.ui.checkbox.CheckBoxServerRpc","setChecked",[true,{"altKey":false,"button":"LEFT","clientX":887,"clientY":259,"ctrlKey":false,"metaKey":false,"relativeX":9,"relativeY":14,"shiftKey":false,"type":1}]]],"syncId":${SYNCID},"clientId":${CLIENTID}}
+#####
+POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 299
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=${JSESSIONID}
+
+{"csrfToken":"${CSRFTOKEN}","rpc":[["185","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":344,"clientY":516,"ctrlKey":false,"metaKey":false,"relativeX":44,"relativeY":14,"shiftKey":false,"type":1}]]],"syncId":${SYNCID},"clientId":${CLIENTID}}

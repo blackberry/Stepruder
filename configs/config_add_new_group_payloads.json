@@ -1,0 +1,21 @@
+{
+	"ssl": true,
+	"port": 443,
+	"substitutions": {
+		"constants": {
+		  "${CSRFTOKEN}": "bfe2c8ae-f736-4a13-97ad-9a2610105c48",
+		  "${JSESSIONID}": "NGce_D-gBPaYo7vgpz4o_0WOcIJUNZeLqMW5o7DM.localhost"
+		},
+		"responsevars": {
+		  "${CLIENTID}": {
+			"regex": "\"clientId\":\\s*(\\d+)"
+		  },
+		  "${SYNCID}": {
+			"regex": "\"syncId\":\\s*(\\d+)"
+		  }
+		}
+	},
+	"payloads": {
+		"${PAYLOAD}": {"type": "list", "path": "payload.txt"}
+	}
+}

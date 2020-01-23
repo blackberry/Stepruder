@@ -1,0 +1,24 @@
+{
+	"ssl": true,
+	"port": 443,
+	"substitutions": {
+		"responsevars": {
+		  "${CLIENTID}": {
+			"regex": "\"clientId\":\\s*(\\d+)"
+		  },
+		  "${SYNCID}": {
+			"regex": "\"syncId\":\\s*(\\d+)"
+		  },
+		  "${CSRFTOKEN}": {
+			"regex": "\"Vaadin-Security-Key\\\":\"(.*?)\\"
+		  },
+		  "${JSESSIONID}": {
+			"regex": "JSESSIONID=(.*?)(?:;|$)"
+		  }
+		}
+	},
+	"payloads": {
+		"${PAYLOAD1}": {"type": "list", "path": "payloads/payload.txt"},
+		"${PAYLOAD2}": {"type": "list", "path": "payloads/payload.txt"}
+	}
+}

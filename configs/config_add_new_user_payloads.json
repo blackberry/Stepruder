@@ -1,0 +1,21 @@
+{
+	"ssl": true,
+	"port": 443,
+	"substitutions": {
+		"constants": {
+		  "${CSRFTOKEN}": "622bc92c-2e42-4dd1-9468-107e199b9322",
+		  "${JSESSIONID}": "TYkdM7h5XSKoVSKXxnYuWpWYEHJbFu5u2c0pzFUb.localhost"
+		},
+		"responsevars": {
+		  "${CLIENTID}": {
+			"regex": "\"clientId\":\\s*(\\d+)"
+		  },
+		  "${SYNCID}": {
+			"regex": "\"syncId\":\\s*(\\d+)"
+		  }
+		}
+	},
+	"payloads": {
+		"${PAYLOAD}": {"type": "list", "path": "payloads-fuzzing-full.txt"}
+	}
+}

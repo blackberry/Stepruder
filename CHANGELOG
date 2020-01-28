@@ -21,3 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixing printing errors
 - Making regex response parsing work
 - utf8 encoding of POST data
+
+## [1.0.0] - 2020-01-23
+### Added
+
+- Establishing the process
+- Adding eval

@@ -25,6 +25,10 @@ class ParsedHTTPRequest(BaseHTTPRequestHandler):
         self.error_code = code
         self.error_message = message
 
+#helper function to evaluate expression
+def repl(m):
+    expr = m.group(1)
+    return str(eval(expr))
 
 #parse payloads from config
 #returns number of iterations based on minimal size of payload lists
@@ -47,11 +51,11 @@ def parse_payloads():
 							payloads[key].append(line.strip())
 							line = payloadlist.readline()
 				except:
-					print ("Can't parse/understand payloads in config json - can't open list", config['payloads'][key]['path'])
-					sys.exit(0)
+					print ("Error - can't parse/understand payloads in config json - can't open list {0}, exiting.".format(config['payloads'][key]['path']))
+					sys.exit(1)
 			else:
-				print ("Can't parse/understand payloads in config json - unknown payload type")
-				sys.exit(0)
+				print ("Error - can't parse/understand payloads in config json - unknown payload type, exiting.")
+				sys.exit(1)
 			iterations = iterations if iterations < len(payloads[key]) else len(payloads[key])
 	else:
 		iterations = 0
@@ -67,8 +71,8 @@ def retrieve_responsevar_json(resp, json_exp):
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
-			print ("Error trying to match JSON response:", e)
-		return None
+			print ("Error trying to match JSON response: {0} with expression {1}, exiting.".format(resp, json_exp))
+		sys.exit(1)
 
 #parse the response and retrieve the value based on the first regex match
 #if capturing group is defined in the regex - the first matching capturing group is captured
@@ -76,22 +80,25 @@ def retrieve_responsevar_json(resp, json_exp):
 def retrieve_responsevar_regex(resp, regex_exp):
 	try:
 		#first search the body
-		value = re.search(regex_exp, str(resp.text))
+		value = re.search(regex_exp, resp.text)
 		if value:
+			if args.verbose:
+				print ('Match for {0} : {1}'.format(regex_exp, value.group(1)))
 			return value.group(1)
 		#if nothing matches - search the headers
 		for header in resp.headers:
 			value = re.search(regex_exp, header)
 			if value:
+				if args.verbose:
+					print ('Match for {0} : {1}'.format(regex_exp, value.group(1)))
 				return value.group(1)
-		else:
-			if args.verbose:
-				print ('No match for {0}'.format(regex_exp))
+		if args.verbose:
+			print ('No match for {0}'.format(regex_exp))
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
-			print ("Error trying to match regex response:", e)
-		return None
+			print ("Error trying to match regex {0} in response {1}, exiting.".format(regex_exp, resp))
+		sys.exit(1)
 
 #send signle request given the request string
 def send_request(rstr, sequence_number, iteration_number):
@@ -99,40 +106,29 @@ def send_request(rstr, sequence_number, iteration_number):
 	#embed responsevar substitutions if any
 	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
-		if args.verbose:
-			print ("Considering substitutions: " + str(skey) + " with " + str(svalue))
 		if svalue:
+			#if args.verbose:
+			#	print ("Considering substitutions: " + str(skey) + " with " + str(svalue))
 			rstr = rstr.replace(skey, str(svalue))
-			if args.verbose:
-				print ('Replacement in current step request: replaced {0} with {1}'.format(skey, svalue))
-					
-	#embed payloads if any
-	for pkey, pvalue in payloads.items():
-		print ("Considering payloads: " + str(pkey) + " with " + str(pvalue[iteration_number]))
-		
-		#should we check for special functions?
-		if rstr.find('${#'):
-			#checking for special functions - len
-			payload_len = "${len(" + pkey + ")}"
-			rstr = rstr.replace(payload_len, str(len(str(pvalue[iteration_number]))))
-
-			#checking for special functions - timestamp
-			payload_timestamp = str(time.time())
-			rstr = rstr.replace("#timestamp", payload_timestamp)) #same timestamp in all occurences
-
-		#now replace the actual payload
-		rstr = rstr.replace(pkey, str(pvalue[iteration_number]))
-		if args.verbose:
-			print ('Replacement in payload request: replaced {0} with {1}'.format(pkey, pvalue[iteration_number]))
-				
+			#if args.verbose:
+			#	print ('Replacement in current iteration request: replaced {0} with {1}'.format(skey, svalue))
+	
+	#evaluate request-scope expressions - starting with ${!
+	try:
+		rstr = re.sub("\\${!(.*?)}", repl, rstr)
+	except Exception as e:
+		print ("Error evaluating request-scope expression in sequence {0}, request{1}, exiting.".format(str(sequence_number), iteration))
+		current_step_substitutions.clear()	#no response - no substitutions
+		sys.exit(1)
+									
 	#automatic request parsing
 	rbytes = rstr.strip().encode('utf-8')
 	try:
 		request = ParsedHTTPRequest(rbytes)
 	except Exception as e:
-		print ("Can't parse/understand HTTP requests from file:", e)
+		print ("Error trying parse/understand HTTP requests from file, exiting: ", e)
 		current_step_substitutions.clear()	#no response - no substitutions
-		return
+		sys.exit(1)
 	
 	#forming the url line - assuming first word is always method
 	if request.requestline.split(" ")[1].startswith('http'):
@@ -180,9 +176,9 @@ def send_request(rstr, sequence_number, iteration_number):
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
 	except Exception as e:
-			print ("Error sending request " + str(sequence_number) + " " + e)
+			print ("Error sending request {0}, exiting.".format(sequence_number))
 			current_step_substitutions.clear()	#no response - no substitutions
-			return
+			sys.exit(1)
 
 	#fill up current (next) step substitutions
 	#TODO: if this is the last response in the sequence - carry over to the next iteration?
@@ -194,7 +190,7 @@ def send_request(rstr, sequence_number, iteration_number):
 			#for regex we want to scan both the body and headers (f.e. cookies)
 			current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
 		else:
-			print ("Error while performing substitutions")
+			print ("Error while performing substitutions - unrecognized response var, continuing.")
 
 	print ("{0}#####{1}".format(r.status_code, len(r.content)))
 	if logfile:
@@ -204,14 +200,29 @@ def send_request(rstr, sequence_number, iteration_number):
 def send_sequence(request_list, iteration):
 	num = 0
 	print ("Iteration " + str(iteration) + " - starting sequence")
-	print ("Status#####ResponseLen")
-
+	
 	#first request does not have response - init the current_step_substitutions with trivial value
 	current_step_substitutions.clear()
 	
-	for rstr in request_list:
+	request_list_post_sequence_scope__subs = []
+	for rstr in request_list:	
+		try:
+			for pkey, pvalue in payloads.items():
+				rstr = re.sub(pkey, str(pvalue[iteration]), rstr)
+		
+			rstr = re.sub("\\${#(.*?)}", repl, rstr)
+		except Exception as e:
+			print ("Error matching sequence-scope regex in sequence {0}, exiting.".format(sequence_number))
+			current_step_substitutions.clear()	#no response - no substitutions
+			sys.exit(1)	
+		
+		request_list_post_sequence_scope__subs.append(rstr)
+
+	print ("Status#####ResponseLen")	
+	for rstr in request_list_post_sequence_scope__subs:
 		num+=1
 		send_request(rstr, num, iteration)
+
 	print ("Iteration " + str(iteration) + " - sequence finished")
 	
 #GLOBAL VARS
@@ -252,8 +263,8 @@ try:
     with open(args.requestsfile, 'r') as rf:
         requestbulk = rf.read()
 except Exception as e:
-	print ("Can't open requests file " + args.requestsfile + ": " + e)
-	sys.exit(0)
+	print ("Error - can't open requests file {0}, exiting.".format(args.requestsfile))
+	sys.exit(1)
 
 #parse config file as json
 try:
@@ -261,16 +272,16 @@ try:
         config = json.load(configfile)
 		#config = configfile.read()
 except Exception as e:
-	print ("Can't load json from file " + args.configfile + " " + e)
-	sys.exit(0)
+	print ("Error - can't load json from file {0}, exiting.".format(args.configfile))
+	sys.exit(1)
 
 try:
 	logfile = None
 	if args.log:
 		logfile = open(args.log, 'w')
 except Exception as e:
-	print ("Can't open log file for writing:" + args.log + " " + e)
-	sys.exit(0)
+	print ("Error - can't open log file {0} for writing, exiting.".format(args.log))
+	sys.exit(1)
 
 #parse the ssl config
 if 'ssl' in config and config['ssl']:
@@ -308,7 +319,6 @@ current_step_substitutions = {}
 step_substitutions_num = 0
 if ('substitutions' in config.keys()) and ('responsevars' in config['substitutions'].keys()):
     for key,value in config['substitutions']['responsevars'].items():
-        step_substitutions_num += 1
         if 'json' in value.keys():
             if 'steps' in value.keys():
                 for i in value['steps']:
@@ -317,6 +327,11 @@ if ('substitutions' in config.keys()) and ('responsevars' in config['substitutio
                 for i in range(0,len(request_list),1):
                     step_substitutions[i][key] = ('json',value['json'])
         elif 'regex' in value.keys():
+            try:
+                re.compile(value['regex'])
+            except Exception as e:
+                print ("Can't compile regex {0}, skipping and, continuing.".format(value['regex']))
+                continue
             if 'steps' in value.keys():
                 for i in value['steps']:
                     step_substitutions[i][key] = ('regex',value['regex'])
@@ -324,11 +339,12 @@ if ('substitutions' in config.keys()) and ('responsevars' in config['substitutio
                 for i in range(0,len(request_list),1):
                     step_substitutions[i][key] = ('regex',value['regex'])
         else:
-            print("Can't parse config file - invalid responsevar")
+            print("Error - can't parse config file - invalid responsevar, exiting.")
             if logfile:
                 logfile.close()
-            sys.exit(0)
-
+            sys.exit(1)
+        step_substitutions_num += 1
+        
 if (args.verbose):
 	print ("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
 		len(constant_substitutions),

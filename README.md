@@ -8,25 +8,25 @@ Python3 installation required as this project is a python script designed to run
 
 # Usage
 
-usage: stepruder.py [-h] [-s SEPARATOR] [-l LOG] [-v] requestsfile configfile
+Usage: stepruder.py [-h] [-s SEPARATOR] [-l LOG] [-v] requestsfile configfile
 
 This is a mix between Stepper and Intruder script that automates payload injection into the long request sequences rather than into an individual request. It parses requests file and configuration json. It applies then substitutions from the config file, injects the payloads and sends the processed requests in order.
 
-positional arguments:
-  requestsfile          Text file containing sequence of HTPP requests, each separated by separator line (default #####)
-  configfile            JSON file containing variables substitutions and other configs
+Positional arguments:
+* requestsfile          Text file containing sequence of HTPP requests, each separated by separator line (default #####)
+*   configfile            JSON file containing variables substitutions and other configs
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -s SEPARATOR, --separator SEPARATOR
-                        Custom separator between requests in requestsfile
-  -l LOG, --log LOG     Traffic log for debug purposes
-  -v, --verbose         Increase output verbosity
+Optional arguments:
+* -h, --help            show this help message and exit
+*   -s SEPARATOR, --separator SEPARATOR Custom separator between requests in requestsfile
+*   -l LOG, --log LOG     Traffic log for debug purposes
+*   -v, --verbose         Increase output verbosity
+
 
 Requestsfile should contain a plaintext sequence of request templates with potential substitution variables and eval expressions. Substitution variables can be of 3 different scopes:
-(1) Constant substitutions
-(2) Sequence-scope substitutions
-(3) Request-scope substitutions
+1. Constant substitutions
+2. Sequence-scope substitutions
+3. Request-scope substitutions
 
 Constant substitutions defined under "substitutions" in config json as "constants", are replaced only once before the start of the sending process. This will be a simple string replace substitution. These are useful for variables that stay constants through entire program but may be 
 different between the program runs (i.e. cookie).
@@ -40,7 +40,8 @@ of the sequence); eval expressions enclosed in ${!...} are request-scoped. Eval 
 one value. This value is then substituted into the request sequence. The eval expression may or may not include variables (i.e. ${!time.time()} vs ${#len(PAYLOAD)}). The expression should only use Python modules imported already in the script (see list at the beginning of the stepruder.py) or import its own modules.
 
 The simplified overall flow of the program looks as following:
-        Parsing requestfile and config json
+
+`Parsing requestfile and config json
         Form payloads arrays, identify number of sequences
         Constant substitutions
         While more sequences - start sequence i:
@@ -50,7 +51,7 @@ The simplified overall flow of the program looks as following:
                         Substitute responsevars from j-1 response
                         Evaluate request-scope eval expressions
                         Send request j
-                        Parse responsevars from j response
+                        Parse responsevars from j response`
 
 In addition, config json may include following connection configs: ssl (Boolean), port (Numeric), proxies (Dictionary) and response parsing regex "grep_final_response". For example:
         "ssl": true,
@@ -63,6 +64,6 @@ In addition, config json may include following connection configs: ssl (Boolean)
         "substitutions": {...
 
 Current Stepruder limitations:
-(1) No parallel sequence sending yet. This should improve the performance dramatically.
-(2) No different payload injection combos (i.e. only Sniper or Pitchfork in Intruder terms).
-(3) No advanced encoding/decoding capabilities yet. Payloads / substitutions that include special characters might interfere with JSON parsing and regex matching.
+1. No parallel sequence sending yet. This should improve the performance dramatically.
+2. No different payload injection combos (i.e. only Sniper or Pitchfork in Intruder terms).
+3. No advanced encoding/decoding capabilities yet. Payloads / substitutions that include special characters might interfere with JSON parsing and regex matching.

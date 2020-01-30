@@ -22,8 +22,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Making regex response parsing work
 - utf8 encoding of POST data
 
-## [1.0.0] - 2020-01-23
+## [0.0.3] - 2020-01-23
 ### Added
 
-- Establishing the process
-- Adding eval
+- Re-establishing the process flow - sequence-scope vs request-scope substitutions
+- ${#} vs ${!}
+- Adding eval functionality and refactoring the substitutions logic - using regex sub function heavily
+- Cleaning up the exception/program termination logic - when to terminate when to continue
+
+## [0.0.4] - 2020-01-30
+### Added
+
+- Verbose help output
+- Updating README
+- Adding proxy option for request sending
+- Adding grep_last_Response feature
+- Refactoring globals.py

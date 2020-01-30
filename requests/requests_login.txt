@@ -24,9 +24,9 @@ Content-Length: 180
 Origin: https://10.135.51.72
 Connection: close
 Referer: https://10.135.51.72/css/ui
-Cookie: JSESSIONID=#JSESSIONID3
+Cookie: JSESSIONID=#JSESSIONID
 
-{"csrfToken":"#CSRFTOKEN","rpc":[["13","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["PAYLOAD1",${#len("PAYLOAD1")}]]],"syncId":SYNCID,"clientId":CLIENTID}
+{"csrfToken":"CSRFTOKEN","rpc":[["13","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["admin",5]]],"syncId":SYNCID,"clientId":CLIENTID}
 #####
 POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
 Host: 10.135.51.72
@@ -41,7 +41,7 @@ Connection: close
 Referer: https://10.135.51.72/css/ui
 Cookie: JSESSIONID=#JSESSIONID
 
-{"csrfToken":"CSRFTOKEN","rpc":[["12","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["PAYLOAD2",${#len("PAYLOAD2")}]]],"syncId":SYNCID,"clientId":CLIENTID}
+{"csrfToken":"CSRFTOKEN","rpc":[["12","com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc","setText",["PAYLOAD1",${#len("PAYLOAD1")}]]],"syncId":SYNCID,"clientId":CLIENTID}
 #####
 POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
 Host: 10.135.51.72
@@ -72,7 +72,7 @@ Referer: https://10.135.51.72/css/ui
 Cookie: JSESSIONID=#JSESSIONID
 Upgrade-Insecure-Requests: 1
 
-username=PAYLOAD1&password=PAYLOAD2
+username=admin&password=PAYLOAD1
 #####
 POST /css/ui/UIDL/?v-uiId=0 HTTP/1.1
 Host: 10.135.51.72

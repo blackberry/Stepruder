@@ -1,16 +1,21 @@
 {
 	"ssl": true,
 	"port": 443,
+	"grep_last_response": "Invalid credentials",
+	"proxies": {
+		"http": "https://127.0.0.1:8080",
+		"https": "https://127.0.0.1:8080"
+	},
 	"substitutions": {
 		"responsevars": {
 		  "CLIENTID": {
-			"regex": "clientId\":\\s*(\\d+)"
+			"regex": "clientId.*?:\\s*(\\d+)"
 		  },
 		  "SYNCID": {
-			"regex": "syncId\":\\s*(\\d+)"
+			"regex": "syncId.*?:\\s*(\\d+)"
 		  },
 		  "CSRFTOKEN": {
-			"regex": "Vaadin-Security-Key\\\\\":\\\\\"(.*?)\\\\"
+			"regex": "Vaadin-Security-Key.*?:\\\\\"(.*?)\\\\"
 		  },
 		  "#JSESSIONID": {
 			"regex": "JSESSIONID=(.*?)(?:;|$)"
@@ -18,7 +23,6 @@
 		}
 	},
 	"payloads": {
-		"PAYLOAD1": {"type": "list", "path": "payloads/payload.txt"},
-		"PAYLOAD2": {"type": "list", "path": "payloads/payload.txt"}
+		"PAYLOAD1": {"type": "list", "path": "payloads/payload.txt"}
 	}
 }

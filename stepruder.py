@@ -12,8 +12,9 @@ import http.client
 from collections import defaultdict
 from http.server import BaseHTTPRequestHandler
 from io import BytesIO
+from globals import *
 
-#cass for parsing the HTTP request from text - adapted from https://stackoverflow.com/questions/4685217/parse-raw-http-headers
+#class for parsing the HTTP request from text - adapted from https://stackoverflow.com/questions/4685217/parse-raw-http-headers
 class ParsedHTTPRequest(BaseHTTPRequestHandler):
     def __init__(self, request_text):
         self.rfile = BytesIO(request_text)
@@ -65,7 +66,7 @@ def parse_payloads():
 #if multiple values appear the behavior is undefined
 def retrieve_responsevar_json(resp, json_exp):
 	try:
-		respdict = json.loads(resp.content)	#json parse just the body of the response
+		respdict = json.loads(resp.text)	#json parse just the body of the response
 		value = respdict[json_exp]	#TODO: what happens if 2 duplicate keys present? Python dictionary does not support duplicate keys BTW
 		return value
 	except Exception as e:
@@ -86,8 +87,8 @@ def retrieve_responsevar_regex(resp, regex_exp):
 				print ('Match for {0} : {1}'.format(regex_exp, value.group(1)))
 			return value.group(1)
 		#if nothing matches - search the headers
-		for header in resp.headers:
-			value = re.search(regex_exp, header)
+		for headername, headerval in resp.headers.items():
+			value = re.search(regex_exp, headerval)
 			if value:
 				if args.verbose:
 					print ('Match for {0} : {1}'.format(regex_exp, value.group(1)))
@@ -97,11 +98,11 @@ def retrieve_responsevar_regex(resp, regex_exp):
 	except Exception as e:
 		#return none if something goes south
 		if args.verbose:
-			print ("Error trying to match regex {0} in response {1}, exiting.".format(regex_exp, resp))
+			print ("Error trying to match regex {0} in response {1}, exiting.".format(regex_exp, resp.text))
 		sys.exit(1)
 
 #send signle request given the request string
-def send_request(rstr, sequence_number, iteration_number):
+def send_request(rstr, request_number, iteration_number):
 	
 	#embed responsevar substitutions if any
 	#in first request first iteration there should be no substitutions
@@ -142,7 +143,7 @@ def send_request(rstr, sequence_number, iteration_number):
 			url = "http//" + request.headers['host'].split(":")[0] + ":" + str(port) + request.requestline.split(" ")[1]
 
 	if (args.verbose):
-		print ('Sending {0} request {1} to {2}'.format(request.command, sequence_number, url))
+		print ('Sending {0} request {1} to {2}'.format(request.command, request_number, url))
 
 	try:
 		if logfile:
@@ -162,13 +163,14 @@ def send_request(rstr, sequence_number, iteration_number):
 			#limiting number of spits to 1 to only split on the first newline in case there are multiple
 			rdata = rstr.split("\n\n", 1)[1].strip().encode('utf-8')
 			if logfile:
-				logfile.write(rdata + "\n")
+				logfile.write(str(rdata) + "\n")
 
 			r = requests.post(
 				url,
 				headers=request.headers, 
 				data=rdata,
 				verify=False,
+				proxies=proxies,
 				timeout=(2,2)) #TODO should timeout be part of the config?
 		else:
 			#other methods are easy to add
@@ -176,26 +178,40 @@ def send_request(rstr, sequence_number, iteration_number):
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
 	except Exception as e:
-			print ("Error sending request {0}, exiting.".format(sequence_number))
+			print ("Error sending request {0}, exiting.".format(request_number))
 			current_step_substitutions.clear()	#no response - no substitutions
 			sys.exit(1)
 
 	#fill up current (next) step substitutions
 	#TODO: if this is the last response in the sequence - carry over to the next iteration?
-	for skey, svalue in step_substitutions[sequence_number % len(request_list)].items():
+	for skey, svalue in step_substitutions[request_number % len(request_list)].items():
 		if svalue[0] == 'json':
 			#for json it only makes sense to scan the response body
-			current_step_substitutions[skey] = retrieve_responsevar_json(r, svalue[1])
+			new_value = retrieve_responsevar_json(r, svalue[1])
+			#we are only interested in non-trivial values, otherwise leave it the same substitution
+			if new_value != None:
+				current_step_substitutions[skey] = new_value
 		elif svalue[0] == 'regex':
 			#for regex we want to scan both the body and headers (f.e. cookies)
-			current_step_substitutions[skey] = retrieve_responsevar_regex(r, svalue[1])
+			new_value = retrieve_responsevar_regex(r, svalue[1])
+			#we are only interested in non-trivial values, otherwise leave it the same substitution
+			if new_value != None:
+				current_step_substitutions[skey] = new_value
 		else:
 			print ("Error while performing substitutions - unrecognized response var, continuing.")
-
+	
 	print ("{0}#####{1}".format(r.status_code, len(r.content)))
 	if logfile:
 		logfile.write("---------------------\n" + str(r.content) + "\n======================\n")
-			
+
+	# if last payload and grep_result is present check for response
+	if grep_last_response_regex and request_number == len(request_list):
+		value = re.search(grep_last_response_regex, r.text)
+		if value: 
+			print ("Grep match found in last response: " + value.string)
+		else:
+			print ("Grep match not found in last response.")
+
 #send the sequence of requests given the array of string requests
 def send_sequence(request_list, iteration):
 	num = 0
@@ -208,11 +224,11 @@ def send_sequence(request_list, iteration):
 	for rstr in request_list:	
 		try:
 			for pkey, pvalue in payloads.items():
-				rstr = re.sub(pkey, str(pvalue[iteration]), rstr)
+				rstr = re.sub(pkey, str(pvalue[iteration]).replace('"', '\\"'), rstr)
 		
 			rstr = re.sub("\\${#(.*?)}", repl, rstr)
 		except Exception as e:
-			print ("Error matching sequence-scope regex in sequence {0}, exiting.".format(sequence_number))
+			print ("Error matching sequence-scope regex in sequence {0}, exiting.".format(iteration))
 			current_step_substitutions.clear()	#no response - no substitutions
 			sys.exit(1)	
 		
@@ -224,18 +240,17 @@ def send_sequence(request_list, iteration):
 		send_request(rstr, num, iteration)
 
 	print ("Iteration " + str(iteration) + " - sequence finished")
+	if logfile:
+		logfile.write("\n\n********************************************** End of the iteration **********************************************\n\n")
 	
-#GLOBAL VARS
-constant_substitutions = {}
-payloads = {}
-sslconfig = False
-port = 80
-
 #MAIN FUNCTION	
 # Argument parsing
-parser = argparse.ArgumentParser(description='Script that parses requests file and configuration json. It applies substitutions from config file and sends the requests in order.')
+parser = argparse.ArgumentParser(
+	description='This is a mix between Stepper and Intruder script that automates payload injection into the long request sequences rather than into an individual request. It parses requests file and configuration json. It applies then substitutions from the config file, injects the payloads and sends the processed requests in order.',
+	formatter_class=argparse.RawTextHelpFormatter,
+	epilog=help_string)
 parser.add_argument("requestsfile", help="Text file containing sequence of HTPP requests, each separated by separator line (default #####)")
-parser.add_argument("configfile", help="JSON file containing variables substitutions and other config")
+parser.add_argument("configfile", help="JSON file containing variables substitutions and other configs")
 parser.add_argument("-s", "--separator", help="Custom separator between requests in requestsfile")
 parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
@@ -289,8 +304,10 @@ if 'ssl' in config and config['ssl']:
 	port = 443
 if 'port' in config:
 	port = config['port']
+if 'proxies' in config and config['proxies']:
+	proxies = config['proxies']
 
-#constant substitutions are perofmed once before starting the iterations
+#constant substitutions are performed once before starting the iterations
 if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():
     constant_substitutions = config['substitutions']['constants']
 for key, value in constant_substitutions.items(): 
@@ -344,14 +361,21 @@ if ('substitutions' in config.keys()) and ('responsevars' in config['substitutio
                 logfile.close()
             sys.exit(1)
         step_substitutions_num += 1
-        
-if (args.verbose):
-	print ("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
-		len(constant_substitutions),
-		step_substitutions_num,
-		len(payloads), 
-		iterations,
-		len(request_list)*iterations))
+
+if 'grep_last_response' in config and config['grep_last_response']:
+	try:
+		re.compile(config['grep_last_response'])
+		grep_last_response_regex = config['grep_last_response']
+	except Exception as e:
+		print ("Error - can't compile grep_last_response regex {0}, exiting.".format(value['regex']))
+		sys.exit(1)
+
+print ("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
+	len(constant_substitutions),
+	step_substitutions_num,
+	len(payloads), 
+	iterations,
+	len(request_list)*iterations))
 
 #main sending loop
 for i in range(0, iterations, 1):

@@ -1,6 +1,7 @@
 #GLOBAL VARS
 constant_substitutions = {}
 payloads = {}
+separator = None
 grep_last_response_regex = None
 sslconfig = False
 port = 80
@@ -47,6 +48,7 @@ The simplified overall flow of the program looks as following:\n\
 (Dictionary) and response parsing regex \"grep_final_response\". For example:\n\
 \t\"ssl\": true,\n\
 \t\"port\": 443,\n\
+\t\"request_separator\": \"#####\",\n\
 \t\"grep_last_response\": \"Invalid credentials\",\n\
 \t\"proxies\": {\n\
 \t\t\"http\": \"https://127.0.0.1:8080\"\n\

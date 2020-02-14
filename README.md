@@ -14,7 +14,7 @@ This is a mix between Stepper and Intruder script that automates payload injecti
 
 Positional arguments:
 * requestsfile          Text file containing sequence of HTPP requests, each separated by separator line (default #####)
-*   configfile            JSON file containing variables substitutions and other configs
+* configfile            JSON file containing variables substitutions and other configs
 
 Optional arguments:
 * -h, --help            show this help message and exit

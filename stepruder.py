@@ -118,7 +118,7 @@ def send_request(rstr, request_number, iteration_number):
 	try:
 		rstr = re.sub("\\${!(.*?)}", repl, rstr)
 	except Exception as e:
-		print ("Error evaluating request-scope expression in sequence {0}, request{1}, exiting.".format(str(sequence_number), iteration))
+		print ("Error evaluating request-scope expression in sequence {0}, request{1}, exiting.".format(str(iteration_number), request_number))
 		current_step_substitutions.clear()	#no response - no substitutions
 		sys.exit(1)
 									
@@ -251,7 +251,6 @@ parser = argparse.ArgumentParser(
 	epilog=help_string)
 parser.add_argument("requestsfile", help="Text file containing sequence of HTPP requests, each separated by separator line (default #####)")
 parser.add_argument("configfile", help="JSON file containing variables substitutions and other configs")
-parser.add_argument("-s", "--separator", help="Custom separator between requests in requestsfile")
 parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
 parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
 args = parser.parse_args()
@@ -304,6 +303,8 @@ if 'ssl' in config and config['ssl']:
 	port = 443
 if 'port' in config:
 	port = config['port']
+if 'request_separator' in config:
+	separator = config['request_separator']
 if 'proxies' in config and config['proxies']:
 	proxies = config['proxies']
 
@@ -319,10 +320,7 @@ for key, value in constant_substitutions.items():
 		print ("Replacement in constant request: replaced {0} with {1}".format(key, value))
 
 #parse the bulk and get a list of requests
-if args.separator:
-	request_list = re.split(args.separator, requestbulk)
-else:
-	request_list = re.split(r'#####', requestbulk)
+request_list = re.split(separator, requestbulk)
 
 #payloads parsing if any	
 if 'payloads' in config.keys():

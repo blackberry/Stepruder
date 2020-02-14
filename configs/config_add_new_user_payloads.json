@@ -1,6 +1,7 @@
 {
 	"ssl": true,
 	"port": 443,
+	"request_separator": "#####",
 	"substitutions": {
 		"constants": {
 		  "${CSRFTOKEN}": "622bc92c-2e42-4dd1-9468-107e199b9322",

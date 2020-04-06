@@ -38,3 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adding proxy option for request sending
 - Adding grep_last_Response feature
 - Refactoring globals.py
+
+## [0.0.5] - 2020-04-06
+### Added
+
+- Adding encoding functionality for payloads with optionsl url- and jsonencoding
+- Cleaning up some error and exception code
+- Increasing requests timeout to 4 sequence
+- Fixing proxies bug in GET request
+- Higher logging level in none-verbose mode

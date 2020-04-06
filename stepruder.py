@@ -24,6 +24,7 @@ import re
 import json
 import requests
 import urllib3
+import urllib.parse
 import logging
 import time
 import http.client
@@ -62,13 +63,22 @@ def parse_payloads():
 				for i in range(int(config['payloads'][key]['start']), int(config['payloads'][key]['end']), int(config['payloads'][key]['step'])):
 					payloads[key].append(i)
 			elif config['payloads'][key]['type'] == 'list':
+				#prep encoding if needed
+				if config['payloads'][key]['encoding']:
+					encodingsequence = config['payloads'][key]['encoding'].split(',');
 				#parse payloads from the list
 				try:
 					with open(config['payloads'][key]['path'], 'r', encoding='utf-8') as payloadlist:
 						line = payloadlist.readline()
 						while line and line != "":
-							#stripping from newlines and whitespaces before adding
-							payloads[key].append(line.strip())
+							#payload processing befire sending
+							lineprocessed = line.strip()
+							for enc in encodingsequence:
+								if enc == "urlencode":
+									lineprocessed = urllib.parse.quote(lineprocessed)
+								if enc == "jsonencode":
+									lineprocessed = json.dumps(lineprocessed)
+							payloads[key].append(lineprocessed)
 							line = payloadlist.readline()
 				except:
 					print ("Error - can't parse/understand payloads in config json - can't open list {0}, exiting.".format(config['payloads'][key]['path']))
@@ -127,18 +137,17 @@ def send_request(rstr, request_number, iteration_number):
 	#in first request first iteration there should be no substitutions
 	for skey, svalue in current_step_substitutions.items():
 		if svalue:
-			#if args.verbose:
-			#	print ("Considering substitutions: " + str(skey) + " with " + str(svalue))
+			if args.verbose:
+				print ("Considering substitutions: " + str(skey) + " with " + str(svalue))
 			rstr = rstr.replace(skey, str(svalue))
-			#if args.verbose:
-			#	print ('Replacement in current iteration request: replaced {0} with {1}'.format(skey, svalue))
+			if args.verbose:
+				print ('Replacement in current iteration request: replaced {0} with {1}'.format(skey, svalue))
 	
 	#evaluate request-scope expressions - starting with ${!
 	try:
 		rstr = re.sub("\\${!(.*?)}", repl, rstr)
 	except Exception as e:
 		print ("Error evaluating request-scope expression in sequence {0}, request{1}, exiting.".format(str(iteration_number), request_number))
-		current_step_substitutions.clear()	#no response - no substitutions
 		sys.exit(1)
 									
 	#automatic request parsing
@@ -147,9 +156,13 @@ def send_request(rstr, request_number, iteration_number):
 		request = ParsedHTTPRequest(rbytes)
 	except Exception as e:
 		print ("Error trying parse/understand HTTP requests from file, exiting: ", e)
-		current_step_substitutions.clear()	#no response - no substitutions
 		sys.exit(1)
 	
+	#parser can fail without throwing an exception
+	if request.error_message:
+		print ("Error trying parse/understand HTTP requests from file: ", request.error_message)
+		sys.exit(1)
+
 	#forming the url line - assuming first word is always method
 	if request.requestline.split(" ")[1].startswith('http'):
 		#full url is already included in the requestline
@@ -175,7 +188,8 @@ def send_request(rstr, request_number, iteration_number):
 				url,
 				headers=request.headers,
 				verify=False,
-				timeout=(2,2))	#2s should to connect and read the response TODO should this be in config?
+				proxies=proxies,
+				timeout=(4,4))	#2s should to connect and read the response TODO should this be in config?
 		elif (request.command == 'POST'):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
 			#according to RFC, we expect at least one line in the request body 
@@ -190,20 +204,19 @@ def send_request(rstr, request_number, iteration_number):
 				data=rdata,
 				verify=False,
 				proxies=proxies,
-				timeout=(2,2)) #TODO should timeout be part of the config?
+				timeout=(4,4)) #TODO should timeout be part of the config?
 		else:
 			#other methods are easy to add
 			print ("Unsupported method")
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
 	except Exception as e:
-			print ("Error sending request {0}, exiting.".format(request_number))
-			current_step_substitutions.clear()	#no response - no substitutions
+			print ("Error sending request {0}, exiting. Exception: {1}".format(request_number,e))
 			sys.exit(1)
 
 	#fill up current (next) step substitutions
 	#TODO: if this is the last response in the sequence - carry over to the next iteration?
-	for skey, svalue in step_substitutions[request_number % len(request_list)].items():
+	for skey, svalue in step_substitutions[(request_number-1) % len(request_list)].items():
 		if svalue[0] == 'json':
 			#for json it only makes sense to scan the response body
 			new_value = retrieve_responsevar_json(r, svalue[1])
@@ -243,12 +256,17 @@ def send_sequence(request_list, iteration):
 	for rstr in request_list:	
 		try:
 			for pkey, pvalue in payloads.items():
-				rstr = re.sub(pkey, str(pvalue[iteration]).replace('"', '\\"'), rstr)
-		
+				#we are doing json escaping when needed at the payload processing stage
+				#s = str(pvalue[iteration]).replace('"', '\\"').replace('\\', '\\\\')
+				try:
+					rstr = re.sub(pkey, str(pvalue[iteration]), rstr)
+				except Exception as e:
+					print ("Can't inject payload - bad character? Continuing.")
+					current_step_substitutions.clear()	#no response - no substitutions
+					return
 			rstr = re.sub("\\${#(.*?)}", repl, rstr)
 		except Exception as e:
-			print ("Error matching sequence-scope regex in sequence {0}, exiting.".format(iteration))
-			current_step_substitutions.clear()	#no response - no substitutions
+			print ("Error matching sequence-scope regex in sequence {0}, exiting: {1}".format(iteration, e))
 			sys.exit(1)	
 		
 		request_list_post_sequence_scope__subs.append(rstr)
@@ -286,9 +304,9 @@ if args.verbose:
 else:
 	http.client.HTTPConnection.debuglevel = 0
 	logging.basicConfig()
-	logging.getLogger().setLevel(logging.ERROR)
+	logging.getLogger().setLevel(logging.CRITICAL)
 	requests_log = logging.getLogger("requests.packages.urllib3")
-	requests_log.setLevel(logging.ERROR)
+	requests_log.setLevel(logging.CRITICAL)
 	requests_log.propagate = True
 
 #read requests file

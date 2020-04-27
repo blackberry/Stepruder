@@ -18,7 +18,6 @@
 ################################################################################
 
 #!/usr/bin/python
-import sys
 import argparse
 import re
 import json
@@ -183,12 +182,17 @@ def send_request(rstr, request_number, iteration_number):
 			logfile.write(url + "\n")
 			logfile.write(str(request.headers))
 
+		size = 0
+		start = time.time()
+		content= None
+
 		if (request.command == 'GET'):
 			r = requests.get(
 				url,
 				headers=request.headers,
 				verify=False,
 				proxies=proxies,
+				stream=True,				
 				timeout=(4,4))	#2s should to connect and read the response TODO should this be in config?
 		elif (request.command == 'POST'):
 			#get data first, if PUT/PUSH methods are added move this out of the branching statement
@@ -204,12 +208,30 @@ def send_request(rstr, request_number, iteration_number):
 				data=rdata,
 				verify=False,
 				proxies=proxies,
+				stream=True,
 				timeout=(4,4)) #TODO should timeout be part of the config?
 		else:
 			#other methods are easy to add
-			print ("Unsupported method")
+			print ("Unsupported method, continuing.")
 			current_step_substitutions.clear()	#no response - no substitutions
 			return
+
+		try:
+			if int(r.headers.get('Content-Length')) > maxresponsebody:
+				if args.verbose:
+					print ("Response size violation expected, continuing in chinks.")
+
+				for chunk in r.iter_content(maxresponsebody):
+					size += len(chunk)
+					content = chunk
+					#we can break because we've already read our maxresponsebody in 1 iteration 
+					break;
+			else:
+				content = r.content
+			#print (r.text)
+		except Exception as e:
+			print ("Problems with response: {0}, continuing.".format(e))
+
 	except Exception as e:
 			print ("Error sending request {0}, exiting. Exception: {1}".format(request_number,e))
 			sys.exit(1)
@@ -232,9 +254,9 @@ def send_request(rstr, request_number, iteration_number):
 		else:
 			print ("Error while performing substitutions - unrecognized response var, continuing.")
 	
-	print ("{0}#####{1}".format(r.status_code, len(r.content)))
+	print ("{0}#####{1}".format(r.status_code, len(r.text)))
 	if logfile:
-		logfile.write("---------------------\n" + str(r.content) + "\n======================\n")
+		logfile.write("---------------------\n" + r.text + "\n======================\n")
 
 	# if last payload and grep_result is present check for response
 	if grep_last_response_regex and request_number == len(request_list):
@@ -334,7 +356,7 @@ except Exception as e:
 	print ("Error - can't open log file {0} for writing, exiting.".format(args.log))
 	sys.exit(1)
 
-#parse the ssl config
+#parse other configs
 if 'ssl' in config and config['ssl']:
 	sslconfig = True
 	port = 443
@@ -344,6 +366,8 @@ if 'request_separator' in config:
 	separator = config['request_separator']
 if 'proxies' in config and config['proxies']:
 	proxies = config['proxies']
+if 'cap_response_body_size' in config:
+	maxresponsebody = config['cap_response_body_size']
 
 #constant substitutions are performed once before starting the iterations
 if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():

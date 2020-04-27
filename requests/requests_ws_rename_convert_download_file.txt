@@ -6,7 +6,6 @@ Accept-Language: en-CA,en-US;q=0.7,en;q=0.3
 Authorization: #AUTH
 Accept-Encoding: gzip, deflate
 Origin: https://sir1bbws01.sir1.sw.rim.net
-Connection: close
 Referer: https://sir1bbws01.sir1.sw.rim.net/ngdox/workspaces
 
 #####
@@ -20,7 +19,6 @@ Accept-Encoding: gzip, deflate
 Content-Type: application/json
 Content-Length: 129
 Origin: https://sir1bbws01.sir1.sw.rim.net
-Connection: close
 Referer: https://sir1bbws01.sir1.sw.rim.net/ngdox/workspaces
 
 {"deviceType":"BROWSER","newFileName":#PAYLOAD}
@@ -35,7 +33,6 @@ Accept-Encoding: gzip, deflate
 Content-Type: application/json
 Content-Length: 25
 Origin: https://sir1bbws01.sir1.sw.rim.net
-Connection: close
 Referer: https://sir1bbws01.sir1.sw.rim.net/ngdox/workspaces/
 
 {"publicKey":{"alg":"RSA-OAEP","e":"AQAB","ext":true,"key_ops":["encrypt"],"kty":"RSA","n":"kvE_oZijU2b0zsJanWci8OoF9TJxzpLOqvLJcYI-Apb9EFieYMVvWwsWY7IxmP232KyA0w7bNu3s-Lf9hCL3PaRdO1pE6xYH5hdAibAr9-EcnHbF8NUloWUpG4SikwUO10aLqef5w-fOPHcfBKeQHer1pXQ3bm4o-YQCtW4YXF_8SeiMbM1okZwcKsnOEVYOuv6TZXVO09mb3nio7z0jvWmCm0Gs_3ngN72G_xDe8w8NPIbQZSyoDlU7D6uzCvpfvFlhZipFkZcHiZ6s7X-q_UxsbgXhRde3_ctvyyOtgimazArWG4cTO2nDG-S55wA4xA2YDGQ3G9JIqK6ZeCzffw"},"blockEncryptionAlgorithm":"CBC"}
@@ -50,7 +47,6 @@ Accept-Encoding: gzip, deflate
 Content-Type: application/json
 Content-Length: 25
 Origin: https://sir1bbws01.sir1.sw.rim.net
-Connection: close
 Referer: https://sir1bbws01.sir1.sw.rim.net/ngdox/workspaces/
 
 {"downloadType":"PROTECTED","documentGuids":["#FILEGUID"],"folderGuids":[],"forceAction":true,"shouldInitiatePdfConversion":true,"shouldAggregateMessage":false}
@@ -65,7 +61,6 @@ Accept-Encoding: gzip, deflate
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 25
 Origin: https://sir1bbws01.sir1.sw.rim.net
-Connection: close
 Referer: https://sir1bbws01.sir1.sw.rim.net/ngdox/workspaces/
 
 downloadType=PROTECTED&guid=#FILEGUID&access_token=#DOWNLOADTOKEN

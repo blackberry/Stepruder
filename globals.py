@@ -16,6 +16,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ################################################################################
+import sys
 
 #GLOBAL VARS
 constant_substitutions = {}
@@ -25,6 +26,7 @@ grep_last_response_regex = None
 sslconfig = False
 port = 80
 proxies = {}
+maxresponsebody = sys.maxsize
 
 help_string = "Requestsfile should contain a plaintext sequence of request templates with potential substitution \
 variables and eval expressions. Substitution variables can be of 3 different scopes: \n(1) Constant substitutions \

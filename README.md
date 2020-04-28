@@ -1,6 +1,6 @@
 # Stepruder
 
-This is a pen-testing tool that implements Intruder-like functionality in Python. In addition, it sends a sequence of requests for every payload iteration. The result is a combination of Stepper (new Burp extenstion) and Intruder functionlity.
+This is a pen-testing tool inspired by well-known Burp tool [Intruder](https://portswigger.net/burp/documentation/desktop/tools/intruder) and relatively new Burp extension [Stepper](https://portswigger.net/bappstore/065d156ecefd480fa3efa36e05d55f77), hence the name - Stepruder. Similar to Stepper, the tool allows building long request sequences with inter-dependent requests and responses and ability to define in-request variables. On top of that, Stepruder adds the Intruder-like capability of injecting payloads from wordlists. By combining these together we get a powerfool tool to automate app-level fuzzing within the complex transactions. 
 
 ## Getting Started
 
@@ -10,14 +10,17 @@ Getting the source:
 ```
 git clone https://github.com/blackberry/Stepruder
 ```
+Tested on Ubuntu / CentOS / Windows.
 
-### Installing
+### Pre-requisite
 
-Python3 installation is required as this project is a python script designed to run under Python3. Tested on Ubuntu / CentOS / Windows.
+Python3 installation is required as this project is a python script designed to run under Python3. 
 
 ### Usage 
 
+```
 Usage: stepruder.py [-h] [-s SEPARATOR] [-l LOG] [-v] requestsfile configfile
+```
 
 This script automates payload injection into the long request sequences rather than into an individual request. It parses *requestsfile* and *configfile* json. Then it applies substitutions from the config file, injects the payloads and sends the processed requests in order.
 

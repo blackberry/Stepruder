@@ -1,6 +1,6 @@
 # Stepruder
 
-This is a pen-testing tool inspired by well-known Burp tool [Intruder](https://portswigger.net/burp/documentation/desktop/tools/intruder) and relatively new Burp extension [Stepper](https://portswigger.net/bappstore/065d156ecefd480fa3efa36e05d55f77), hence the name - Stepruder. Similar to Stepper, the tool allows building long request sequences with inter-dependent requests and responses and ability to define in-request variables. On top of that, Stepruder adds the Intruder-like capability of injecting payloads from wordlists. By combining these together we get a powerfool tool to automate app-level fuzzing within the complex transactions. 
+This is a pen-testing tool inspired by well-known Burp tool [Intruder](https://portswigger.net/burp/documentation/desktop/tools/intruder) and relatively new Burp extension [Stepper](https://portswigger.net/bappstore/065d156ecefd480fa3efa36e05d55f77), hence the name - Stepruder. Similar to Stepper, the tool allows building long request sequences with inter-dependent requests and responses and ability to define in-request variables. On top of that, Stepruder adds the Intruder-like capability of injecting payloads from wordlists. By combining these together, we get a powerfool tool to automate app-level fuzzing within the complex transactions. 
 
 ## Getting Started
 
@@ -56,7 +56,7 @@ different between the program runs (i.e. cookie).
 **Eval expression** are substitutions on steroids. Eval expressions enclosed in ${#...} are sequence-scoped (i.e. evaluated once in the beginning of the sequence). eval expressions enclosed in ${!...} are request-scoped. Eval expression by itself is a Python eval expression that returns 
 one value. This value is then substituted into the request sequence. The eval expression may or may not include variables (i.e. ```${!time.time()}``` vs ```${#len(PAYLOAD)}```). The expression should only use Python modules imported already in the script (see list at the beginning of the stepruder.py) or import its own modules.
 
-The simplified overall flow of the program is as follos:
+The simplified overall flow of the program is as follows:
 
 ```
 Parsing requestfile and config json
@@ -89,11 +89,7 @@ In addition, config json may include the following connection configs: ssl (Bool
 Current Stepruder limitations:
 1. No parallel sequence sending yet. This should improve the performance dramatically.
 2. No different payload injection combos (i.e. only Sniper or Pitchfork in Intruder terms).
-3. No advanced encoding/decoding capabilities yet. Payloads / substitutions that include special characters might interfere with JSON parsing and regex matching.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+3. No advanced payload manipulation capabilities. Except json and url encodings, payloads will have to be processed in wordlists.
 
 ## Authors
 

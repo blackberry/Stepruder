@@ -1,6 +1,6 @@
 # Stepruder
 
-This is a pen-testing tool inspired by well-known Burp tool [Intruder](https://portswigger.net/burp/documentation/desktop/tools/intruder) and relatively new Burp extension [Stepper](https://portswigger.net/bappstore/065d156ecefd480fa3efa36e05d55f77), hence the name - Stepruder. Similar to Stepper, the tool allows building long request sequences with inter-dependent requests and responses and ability to define in-request variables. On top of that, Stepruder adds the Intruder-like capability of injecting payloads from wordlists. By combining these together, we get a powerfool tool to automate app-level fuzzing within the complex transactions. 
+This is a pen-testing tool inspired by the well-known Burp tool [Intruder](https://portswigger.net/burp/documentation/desktop/tools/intruder) and relatively new Burp extension [Stepper](https://portswigger.net/bappstore/065d156ecefd480fa3efa36e05d55f77), hence the name - Stepruder. Similar to Stepper, the tool allows building long request sequences with inter-dependent requests and responses and ability to define in-request variables. On top of that, Stepruder adds the Intruder-like capability of injecting payloads from wordlists. By combining these together, we get a powerfool tool to automate app-level fuzzing within the complex transactions. This functionality is particularly useful when pen-testing stateless client apps like those built with Vaadin.
 
 ## Getting Started
 

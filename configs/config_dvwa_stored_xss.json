@@ -1,0 +1,24 @@
+{
+	"ssl": false,
+	"port": 443,
+	"grep_last_response": "Invalid credentials",
+	"request_separator": "#####",
+	"proxies": {
+		"http": "https://127.0.0.1:8080",
+		"https": "https://127.0.0.1:8080"
+	},
+	"substitutions": {
+		"constants": {
+			"#SESSIONID": "be1e78b9-7b26-4328-87d2-3169e127024e"
+		},
+		"responsevars": {
+		  "CLIENTID": {
+			"regex": "clientId.*?:\\s*(\\d+)"
+		  }
+		}
+	},
+	"payloads": {
+		"PAYLOAD1": {"type": "list", "path": "payloads/payloads-xss.txt"},
+		"PAYLOAD2": {"type": "list", "path": "payloads/payloads-xss.txt"}
+	}
+}

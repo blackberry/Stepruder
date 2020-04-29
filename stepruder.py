@@ -65,7 +65,8 @@ def parse_payloads():
                     payloads[key].append(i)
             elif config['payloads'][key]['type'] == 'list':
                 # prep encoding if needed
-                if config['payloads'][key]['encoding']:
+                encodingsequence = None
+                if 'encoding' in config['payloads'][key]:
                     encodingsequence = config['payloads'][key]['encoding'].split(',')
                 # parse payloads from the list
                 try:
@@ -74,11 +75,12 @@ def parse_payloads():
                         while line and line != "":
                             # payload processing befire sending
                             lineprocessed = line.strip()
-                            for enc in encodingsequence:
-                                if enc == "urlencode":
-                                    lineprocessed = urllib.parse.quote(lineprocessed)
-                                if enc == "jsonencode":
-                                    lineprocessed = json.dumps(lineprocessed)
+                            if encodingsequence is not None:
+                                for enc in encodingsequence:
+                                    if enc == "urlencode":
+                                        lineprocessed = urllib.parse.quote(lineprocessed)
+                                    if enc == "jsonencode":
+                                        lineprocessed = json.dumps(lineprocessed)
                             payloads[key].append(lineprocessed)
                             line = payloadlist.readline()
                 except Exception:
@@ -302,143 +304,143 @@ def send_sequence(request_list, iteration):
         logfile.write("\n\n********************************************** End of the iteration **********************************************\n\n")
 
 
-# MAIN FUNCTION
-# Argument parsing
-parser = argparse.ArgumentParser(
-    description='This is a mix between Stepper and Intruder script that automates payload injection into the long request sequences rather than into an individual request. It parses requests file and configuration json. It applies then substitutions from the config file, injects the payloads and sends the processed requests in order.',
-    formatter_class=argparse.RawTextHelpFormatter,
-    epilog=help_string)
-parser.add_argument("requestsfile", help="Text file containing sequence of HTPP requests, each separated by separator line (default #####)")
-parser.add_argument("configfile", help="JSON file containing variables substitutions and other configs")
-parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
-parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
-args = parser.parse_args()
+if __name__ == '__main__':
+    # Argument parsing
+    parser = argparse.ArgumentParser(
+        description='This is a mix between Stepper and Intruder script that automates payload injection into the long request sequences rather than into an individual request. It parses requests file and configuration json. It applies then substitutions from the config file, injects the payloads and sends the processed requests in order.',
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=help_string)
+    parser.add_argument("requestsfile", help="Text file containing sequence of HTPP requests, each separated by separator line (default #####)")
+    parser.add_argument("configfile", help="JSON file containing variables substitutions and other configs")
+    parser.add_argument("-l", "--log", help="Traffic log for debug purposes")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Increase output verbosity")
+    args = parser.parse_args()
 
-# networking and logging config
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-if args.verbose:
-    http.client.HTTPConnection.debuglevel = 1
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.DEBUG)
-    requests_log.propagate = True
-else:
-    http.client.HTTPConnection.debuglevel = 0
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.CRITICAL)
-    requests_log = logging.getLogger("requests.packages.urllib3")
-    requests_log.setLevel(logging.CRITICAL)
-    requests_log.propagate = True
-
-# read requests file
-try:
-    with open(args.requestsfile, 'r') as rf:
-        requestbulk = rf.read()
-except Exception:
-    print("Error - can't open requests file {0}, exiting.".format(args.requestsfile))
-    sys.exit(1)
-
-# parse config file as json
-try:
-    with open(args.configfile, 'r') as configfile:
-        config = json.load(configfile)
-        # config = configfile.read()
-except Exception:
-    print("Error - can't load json from file {0}, exiting.".format(args.configfile))
-    sys.exit(1)
-
-try:
-    logfile = None
-    if args.log:
-        logfile = open(args.log, 'w')
-except Exception:
-    print("Error - can't open log file {0} for writing, exiting.".format(args.log))
-    sys.exit(1)
-
-# parse other configs
-if 'ssl' in config and config['ssl']:
-    sslconfig = True
-    port = 443
-if 'port' in config:
-    port = config['port']
-if 'request_separator' in config:
-    separator = config['request_separator']
-if 'proxies' in config and config['proxies']:
-    proxies = config['proxies']
-if 'cap_response_body_size' in config:
-    maxresponsebody = config['cap_response_body_size']
-
-# constant substitutions are performed once before starting the iterations
-if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():
-    constant_substitutions = config['substitutions']['constants']
-for key, value in constant_substitutions.items():
-    # we can assume the format for substitution is "key: value"
+    # networking and logging config
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     if args.verbose:
-        print("Considering constant substitutions: " + key + " with " + value)
-    requestbulk = requestbulk.replace(key, value)
-    if args.verbose:
-        print("Replacement in constant request: replaced {0} with {1}".format(key, value))
+        http.client.HTTPConnection.debuglevel = 1
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.DEBUG)
+        requests_log = logging.getLogger("requests.packages.urllib3")
+        requests_log.setLevel(logging.DEBUG)
+        requests_log.propagate = True
+    else:
+        http.client.HTTPConnection.debuglevel = 0
+        logging.basicConfig()
+        logging.getLogger().setLevel(logging.CRITICAL)
+        requests_log = logging.getLogger("requests.packages.urllib3")
+        requests_log.setLevel(logging.CRITICAL)
+        requests_log.propagate = True
 
-# parse the bulk and get a list of requests
-request_list = re.split(separator, requestbulk)
-
-# payloads parsing if any
-if 'payloads' in config.keys():
-    iterations = parse_payloads()
-else:
-    iterations = 1
-
-# initializing response vars and assigning them to the appropriate steps
-step_substitutions = [dict() for x in range(len(request_list))]
-current_step_substitutions = {}
-step_substitutions_num = 0
-if ('substitutions' in config.keys()) and ('responsevars' in config['substitutions'].keys()):
-    for key, value in config['substitutions']['responsevars'].items():
-        if 'json' in value.keys():
-            if 'steps' in value.keys():
-                for i in value['steps']:
-                    step_substitutions[i][key] = ('json', value['json'])
-            else:
-                for i in range(0, len(request_list), 1):
-                    step_substitutions[i][key] = ('json', value['json'])
-        elif 'regex' in value.keys():
-            try:
-                re.compile(value['regex'])
-            except Exception:
-                print("Can't compile regex {0}, skipping and, continuing.".format(value['regex']))
-                continue
-            if 'steps' in value.keys():
-                for i in value['steps']:
-                    step_substitutions[i][key] = ('regex', value['regex'])
-            else:
-                for i in range(0, len(request_list), 1):
-                    step_substitutions[i][key] = ('regex', value['regex'])
-        else:
-            print("Error - can't parse config file - invalid responsevar, exiting.")
-            if logfile:
-                logfile.close()
-            sys.exit(1)
-        step_substitutions_num += 1
-
-if 'grep_last_response' in config and config['grep_last_response']:
+    # read requests file
     try:
-        re.compile(config['grep_last_response'])
-        grep_last_response_regex = config['grep_last_response']
+        with open(args.requestsfile, 'r') as rf:
+            requestbulk = rf.read()
     except Exception:
-        print("Error - can't compile grep_last_response regex {0}, exiting.".format(value['regex']))
+        print("Error - can't open requests file {0}, exiting.".format(args.requestsfile))
         sys.exit(1)
 
-print("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
-    len(constant_substitutions),
-    step_substitutions_num,
-    len(payloads),
-    iterations,
-    len(request_list) * iterations))
+# parse config file as json
+    try:
+        with open(args.configfile, 'r') as configfile:
+            config = json.load(configfile)
+            # config = configfile.read()
+    except Exception:
+        print("Error - can't load json from file {0}, exiting.".format(args.configfile))
+        sys.exit(1)
 
-# main sending loop
-for i in range(0, iterations, 1):
-    send_sequence(request_list, i)
+    try:
+        logfile = None
+        if args.log:
+            logfile = open(args.log, 'w')
+    except Exception:
+        print("Error - can't open log file {0} for writing, exiting.".format(args.log))
+        sys.exit(1)
 
-if logfile:
-    logfile.close()
+    # parse other configs
+    if 'ssl' in config and config['ssl']:
+        sslconfig = True
+        port = 443
+    if 'port' in config:
+        port = config['port']
+    if 'request_separator' in config:
+        separator = config['request_separator']
+    if 'proxies' in config and config['proxies']:
+        proxies = config['proxies']
+    if 'cap_response_body_size' in config:
+        maxresponsebody = config['cap_response_body_size']
+
+    # constant substitutions are performed once before starting the iterations
+    if 'substitutions' in config.keys() and 'constants' in config['substitutions'].keys():
+        constant_substitutions = config['substitutions']['constants']
+    for key, value in constant_substitutions.items():
+        # we can assume the format for substitution is "key: value"
+        if args.verbose:
+            print("Considering constant substitutions: " + key + " with " + value)
+        requestbulk = requestbulk.replace(key, value)
+        if args.verbose:
+            print("Replacement in constant request: replaced {0} with {1}".format(key, value))
+
+    # parse the bulk and get a list of requests
+    request_list = re.split(separator, requestbulk)
+
+    # payloads parsing if any
+    if 'payloads' in config.keys():
+        iterations = parse_payloads()
+    else:
+        iterations = 1
+
+    # initializing response vars and assigning them to the appropriate steps
+    step_substitutions = [dict() for x in range(len(request_list))]
+    current_step_substitutions = {}
+    step_substitutions_num = 0
+    if ('substitutions' in config.keys()) and ('responsevars' in config['substitutions'].keys()):
+        for key, value in config['substitutions']['responsevars'].items():
+            if 'json' in value.keys():
+                if 'steps' in value.keys():
+                    for i in value['steps']:
+                        step_substitutions[i][key] = ('json', value['json'])
+                else:
+                    for i in range(0, len(request_list), 1):
+                        step_substitutions[i][key] = ('json', value['json'])
+            elif 'regex' in value.keys():
+                try:
+                    re.compile(value['regex'])
+                except Exception:
+                    print("Can't compile regex {0}, skipping and, continuing.".format(value['regex']))
+                    continue
+                if 'steps' in value.keys():
+                    for i in value['steps']:
+                        step_substitutions[i][key] = ('regex', value['regex'])
+                else:
+                    for i in range(0, len(request_list), 1):
+                        step_substitutions[i][key] = ('regex', value['regex'])
+            else:
+                print("Error - can't parse config file - invalid responsevar, exiting.")
+                if logfile:
+                    logfile.close()
+                sys.exit(1)
+            step_substitutions_num += 1
+
+    if 'grep_last_response' in config and config['grep_last_response']:
+        try:
+            re.compile(config['grep_last_response'])
+            grep_last_response_regex = config['grep_last_response']
+        except Exception:
+            print("Error - can't compile grep_last_response regex {0}, exiting.".format(value['regex']))
+            sys.exit(1)
+
+    print("Parsed: {0} constant substitutions, {1} response variables and {2} injection points; payload sequence length is {3}; total requests to be sent {4}.".format(
+        len(constant_substitutions),
+        step_substitutions_num,
+        len(payloads),
+        iterations,
+        len(request_list) * iterations))
+
+    # main sending loop
+    for i in range(0, iterations, 1):
+        send_sequence(request_list, i)
+
+    if logfile:
+        logfile.close()

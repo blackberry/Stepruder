@@ -15,6 +15,11 @@ Tested on Ubuntu / CentOS / Windows.
 ### Pre-requisite
 
 Python3 installation is required as this project is a python script designed to run under Python3. 
+Install required packages:
+
+```
+pip install -r requirements.txt
+```
 
 ### Usage 
 
@@ -35,8 +40,9 @@ Optional arguments:
 *   -v, --verbose         Increase output verbosity
 
 ```
-python stepruder.py -l debug.log -v requests/requests_login.txt configs/config_login.json
+python3 stepruder.py -l debug.log requests/requests_dvwa_stored_xss.txt configs/config_dvwa_stored_xss.json
 ```
+It is recommended to run the tool through the proxy (i.e. Burp), to have additional reporting / detection capabilities for free.
 
 ### How this works
 
@@ -83,6 +89,8 @@ In addition, config json may include the following connection configs: ssl (Bool
         },
         "substitutions": {...
 ```
+
+Unless you chose not to do it for performance reason, running Stepruder through proxy like Burp is a recommended way of running Stepruder. This way one gets additional reporting / detection / visibility capabilities for free. 
 
 ### Limitations
 

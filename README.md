@@ -64,19 +64,8 @@ one value. This value is then substituted into the request sequence. The eval ex
 
 The simplified overall flow of the program is as follows:
 
-```
-Parsing requestfile and config json
-        Form payloads arrays, identify number of sequences
-        Constant substitutions
-        While more sequences - start sequence i:
-                Payload #1 injection
-                Evaluation of sequence-scope eval expressions
-                While more requests in the sequence:
-                        Substitute responsevars from j-1 response
-                        Evaluate request-scope eval expressions
-                        Send request j
-                        Parse responsevars from j response
-```
+![Stepruder workflow](/stepruder-workflow.png)
+
 
 In addition, config json may include the following connection configs: ssl (Boolean), port (Numeric), proxies (Dictionary) and response parsing regex "grep_final_response". For example:
 ```

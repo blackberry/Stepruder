@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 ################################################################################
 # Name   : Stepruder - main
 # Author : Shay Berkovich
@@ -17,7 +19,6 @@
 #    limitations under the License.
 ################################################################################
 
-#!/usr/bin/env python3
 import argparse
 import re
 import json

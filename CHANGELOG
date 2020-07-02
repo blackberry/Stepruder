@@ -1,0 +1,49 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.0.1] - 2019-11-14
+### Added
+
+- Implementing request file parsing
+- Implementing config file parsing
+- Basic sending / substitution logic
+- Initial commit
+
+## [0.0.2] - 2020-01-23
+### Added
+
+- Fixing bugs
+- Fixing printing errors
+- Making regex response parsing work
+- utf8 encoding of POST data
+
+## [0.0.3] - 2020-01-23
+### Added
+
+- Re-establishing the process flow - sequence-scope vs request-scope substitutions
+- ${#} vs ${!}
+- Adding eval functionality and refactoring the substitutions logic - using regex sub function heavily
+- Cleaning up the exception/program termination logic - when to terminate when to continue
+
+## [0.0.4] - 2020-01-30
+### Added
+
+- Verbose help output
+- Updating README
+- Adding proxy option for request sending
+- Adding grep_last_Response feature
+- Refactoring globals.py
+
+## [0.0.5] - 2020-04-06
+### Added
+
+- Adding encoding functionality for payloads with optionsl url- and jsonencoding
+- Cleaning up some error and exception code
+- Increasing requests timeout to 4 sequence
+- Fixing proxies bug in GET request
+- Higher logging level in none-verbose mode

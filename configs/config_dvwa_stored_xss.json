@@ -1,0 +1,19 @@
+{
+	"ssl": false,
+	"port": 80,
+	"grep_last_response": "Logout",
+	"request_separator": "#####",
+	"proxies": {
+		"http": "http://127.0.0.1:8080",
+		"https": "https://127.0.0.1:8080"
+	},
+	"substitutions": {
+		"constants": {
+			"#SESSIONID": "be1e78b9-7b26-4328-87d2-3169e127024e"
+		}
+	},
+	"payloads": {
+		"PAYLOAD1": {"type": "list", "path": "payloads/payloads-xss.txt"},
+		"PAYLOAD2": {"type": "list", "path": "payloads/payloads-xss.txt"}
+	}
+}

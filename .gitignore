@@ -1,0 +1,5 @@
+.vs*
+log.txt
+out.txt
+__pycache__
+payloads/payload.txt
